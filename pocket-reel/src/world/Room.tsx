@@ -191,9 +191,9 @@ const useLiveTex = (w: number, h: number, draw: (c: CanvasRenderingContext2D, W:
 // ============ camera rig ============
 export type Shot = {pos: [number, number, number]; target: [number, number, number]; fov?: number};
 export const CameraRig: React.FC<Shot> = ({pos, target, fov = 45}) => {
-  const {camera} = useThree();
+  const {camera, size} = useThree();
   camera.position.set(...pos);
-  (camera as THREE.PerspectiveCamera).fov = fov;
+  (camera as THREE.PerspectiveCamera).fov = size.width > size.height ? fov * 0.62 : fov;
   camera.lookAt(...target);
   camera.updateProjectionMatrix();
   return null;

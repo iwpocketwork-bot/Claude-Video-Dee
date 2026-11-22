@@ -12,5 +12,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="PocketReelMinimal" component={ReelMinimal} durationInFrames={900} fps={30} width={1080} height={1920} />
     {/* Style 03 — 3D World */}
     <Composition id="PocketReelWorld" component={ReelWorld} durationInFrames={900} fps={30} width={1080} height={1920} />
+    {/* Style 03 — 3D World, landscape for website */}
+    <Composition id="PocketReelWorldWide" component={ReelWorld} durationInFrames={900} fps={30} width={1920} height={1080} />
   </>
 );

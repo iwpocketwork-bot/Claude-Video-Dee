@@ -25,6 +25,12 @@ const View: React.FC<{shot: Shot; blur?: number; exportP?: number; lidOpen?: num
   );
 };
 
+/** true when rendering the 16:9 website version */
+const useWide = () => {
+  const {width, height} = useVideoConfig();
+  return width > height;
+};
+
 const Vignette: React.FC = () => (
   <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0,0,0,.55) 100%)', pointerEvents: 'none'}} />
 );
@@ -37,11 +43,12 @@ export const W1Desk: React.FC = () => {
   const lid = k(f, 6, 40, io);
   const prog = interpolate(f, [50, 105], [0.3, 0.65], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const out = k(f, 100, 112);
+  const wide = useWide();
   return (
     <AbsoluteFill>
       <View shot={shot} lidOpen={lid} blur={out * 10} />
       <Vignette />
-      <Float3D delay={44} x={110} y={330} w={860} tilt={[8, -6]} out={out}>
+      <Float3D delay={44} x={wide ? 1050 : 110} y={wide ? 120 : 330} w={wide ? 800 : 860} tilt={wide ? [8, -14] : [8, -6]} out={out}>
         <Glass style={{padding: '34px 40px'}}>
           <div style={{display: 'flex', alignItems: 'center', gap: 24}}>
             <div style={{width: 84, height: 84, borderRadius: 22, background: W.lime, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
@@ -92,23 +99,24 @@ export const W2Problems: React.FC = () => {
   const shot: Shot = {pos: mix3([-0.6, 1.8, 1.9], [-1.25, 1.65, 1.35], t), target: [-2.55, 1.6, -1.25], fov: 48};
   const focus = interpolate(f, [0, 16], [0, 6], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const inn = k(f, 0, 10);
+  const wide = useWide();
   return (
     <AbsoluteFill style={{opacity: inn}}>
       <View shot={shot} blur={focus} />
       <Vignette />
-      <QMark x={110} y={470} size={230} delay={10} />
-      <QMark x={820} y={640} size={130} delay={16} />
-      <QMark x={160} y={1180} size={110} delay={22} />
-      <div style={{position: 'absolute', left: 0, right: 0, top: 560, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 46}}>
+      <QMark x={wide ? 820 : 110} y={wide ? 120 : 470} size={wide ? 190 : 230} delay={10} />
+      <QMark x={wide ? 1660 : 820} y={wide ? 300 : 640} size={wide ? 120 : 130} delay={16} />
+      <QMark x={wide ? 880 : 160} y={wide ? 720 : 1180} size={110} delay={22} />
+      <div style={{position: 'absolute', left: wide ? 860 : 0, right: 0, top: wide ? 220 : 560, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 46}}>
         {['Tiada masa?', 'Content tak konsisten?', 'Engagement rendah?'].map((s, i) => (
-          <Float3D key={s} delay={16 + i * 9} x={0} y={0} w={1080} tilt={[0, 0]} relative>
+          <Float3D key={s} delay={16 + i * 9} x={0} y={0} w={wide ? 1060 : 1080} tilt={[0, 0]} relative>
             <div style={{textAlign: 'center', transform: `translateX(${(i - 1) * 70}px) rotate(${(i - 1) * -3}deg)`}}>
               <Pill text={s} color="linear-gradient(180deg,#ffa25a,#f0742a)" size={48} />
             </div>
           </Float3D>
         ))}
       </div>
-      <Float3D delay={52} x={140} y={1110} w={800} tilt={[6, 6]}>
+      <Float3D delay={52} x={wide ? 1030 : 140} y={wide ? 700 : 1110} w={wide ? 720 : 800} tilt={[6, 6]}>
         <Glass style={{padding: '34px 44px', textAlign: 'center', fontSize: 50, fontWeight: 600}} radius={60}>
           Biar <span style={{color: W.lime}}>kami</span> uruskan.
         </Glass>
@@ -171,18 +179,22 @@ const BrandIcon: React.FC = () => {
 export const W3Portal: React.FC = () => {
   const f = useCurrentFrame();
   const t = k(f, 0, 105, io);
-  const shot: Shot = {pos: mix3([0, 2.05, 1.9], [0, 2.05, 1.15], t), target: [0, 2.05, -1.6], fov: 50};
+  const wideW3 = useWide();
+  const shot: Shot = {pos: mix3([0, 2.05, 1.9], [0, 2.05, 1.15], t), target: [0, 2.05, -1.6], fov: wideW3 ? 82 : 50};
   const portal = k(f, 0, 20, io);
   const r = portal * 1300;
   const out = k(f, 92, 104);
+  const wide = useWide();
+  const cx = wide ? 960 : 540;
+  const cy = wide ? 520 : 900;
   return (
     <AbsoluteFill>
-      <AbsoluteFill style={{clipPath: `circle(${r}px at 540px 900px)`}}>
+      <AbsoluteFill style={{clipPath: `circle(${r}px at ${cx}px ${cy}px)`}}>
         <View shot={shot} blur={out * 12}>
           <BrandIcon />
         </View>
         <Vignette />
-        <Float3D delay={50} x={190} y={1240} w={700} tilt={[6, 0]} out={out}>
+        <Float3D delay={50} x={wide ? 610 : 190} y={wide ? 850 : 1240} w={700} tilt={[6, 0]} out={out}>
           <Glass style={{padding: '30px 40px', textAlign: 'center'}}>
             <div style={{fontSize: 46, fontWeight: 600}}>Pocket Production</div>
             <div style={{fontSize: 26, letterSpacing: 4, opacity: 0.8, marginTop: 6}}>PRODUCTION · TRAINING · MOBILEGRAPHY</div>
@@ -194,8 +206,8 @@ export const W3Portal: React.FC = () => {
         <div
           style={{
             position: 'absolute',
-            left: 540 - r,
-            top: 900 - r,
+            left: cx - r,
+            top: cy - r,
             width: r * 2,
             height: r * 2,
             borderRadius: '50%',
@@ -219,12 +231,13 @@ export const W4Services: React.FC = () => {
   const shot: Shot = {pos: mix3([1.0, 1.7, 2.6], [0.5, 1.75, 2.2], t), target: [0, 1.9, -1.6], fov: 50};
   const whip = k(f, 116, 130, io);
   const inn = k(f, 0, 10);
+  const wide = useWide();
   return (
-    <AbsoluteFill style={{opacity: inn, transform: `translateX(${whip * -700}px)`, filter: `blur(${whip * 30}px)`}}>
+    <AbsoluteFill style={{opacity: inn, transform: `translateX(${whip * (wide ? -1200 : -700)}px)`, filter: `blur(${whip * 30}px)`}}>
       <View shot={shot} blur={9} />
       <Vignette />
-      <Float3D delay={4} x={140} y={330} w={800} tilt={[4, -12]}>
-        <Glass style={{padding: '40px 44px'}}>
+      <Float3D delay={4} x={wide ? 1060 : 140} y={wide ? 70 : 330} w={800} tilt={wide ? [4, -18] : [4, -12]}>
+        <Glass style={{padding: '40px 44px', zoom: wide ? 0.82 : 1}}>
           <div style={{display: 'flex', justifyContent: 'space-between'}}>
             <Ring p={k(f, 14, 60)} label="Video" />
             <Ring p={k(f, 20, 66)} label="Foto" />
@@ -256,15 +269,17 @@ const MODS = ['Mobile Filmmaking', 'Smartphone Photography', 'Social Media Reels
 export const W5Training: React.FC = () => {
   const f = useCurrentFrame();
   const t = k(f, 0, 140, io);
-  const shot: Shot = {pos: mix3([0.1, 0.85, 1.95], [0.4, 0.72, 1.45], t), target: mix3([0.95, 0.5, 0.45], [0.95, 0.46, 0.45], t), fov: 46};
+  const wide = useWide();
+  const tx = wide ? 0.35 : 0.95;
+  const shot: Shot = {pos: mix3(wide ? [0.0, 0.95, 2.4] : [0.1, 0.85, 1.95], wide ? [0.25, 0.8, 1.9] : [0.4, 0.72, 1.45], t), target: mix3([tx, 0.5, 0.45], [tx, 0.46, 0.45], t), fov: wide ? 60 : 46};
   const whip = 1 - k(f, 0, 12, io);
   const out = k(f, 126, 140);
   return (
-    <AbsoluteFill style={{transform: `translateX(${whip * 700}px)`, filter: `blur(${whip * 30 + out * 12}px)`}}>
+    <AbsoluteFill style={{transform: `translateX(${whip * (wide ? 1200 : 700)}px)`, filter: `blur(${whip * 30 + out * 12}px)`}}>
       <View shot={shot} />
       <Vignette />
-      <Float3D delay={18} x={70} y={1060} w={720} tilt={[6, 10]} out={out}>
-        <Glass style={{padding: '36px 40px'}}>
+      <Float3D delay={18} x={wide ? 140 : 70} y={wide ? 140 : 1060} w={720} tilt={[6, 10]} out={out}>
+        <Glass style={{padding: '36px 40px', zoom: wide ? 0.92 : 1}}>
           <div style={{fontSize: 24, letterSpacing: 6, color: W.lime, fontWeight: 600}}>TRAINING PROGRAMS</div>
           <div style={{fontSize: 52, fontWeight: 600, lineHeight: 1.15, margin: '12px 0 18px'}}>Belajar buat content sendiri</div>
           {MODS.map((m, i) => {
@@ -295,7 +310,7 @@ export const W5Training: React.FC = () => {
           })}
         </Glass>
       </Float3D>
-      <div style={{position: 'absolute', top: 1720, width: '100%', display: 'flex', justifyContent: 'center', gap: 18, opacity: 1 - out}}>
+      <div style={{position: 'absolute', top: wide ? 860 : 1720, left: wide ? 140 : 0, width: wide ? 720 : '100%', display: 'flex', justifyContent: 'center', gap: 18, opacity: 1 - out}}>
         {['Individu', 'Syarikat', 'Agensi'].map((a, i) => {
           const s = useSpring(80 + i * 6, 11, 170);
           return (
@@ -325,6 +340,7 @@ export const W6Export: React.FC = () => {
   const click = useSpring(92, 10, 200);
   const done = useSpring(152, 13, 140);
   const out = k(f, 186, 200);
+  const wide = useWide();
   const dots = (rad: number) => ({
     WebkitMaskImage: `radial-gradient(circle, #000 ${rad}px, transparent ${rad + 0.8}px)`,
     WebkitMaskSize: '26px 26px',
@@ -339,19 +355,19 @@ export const W6Export: React.FC = () => {
       {f >= 50 && (
         <AbsoluteFill style={{...(d2 < 1 ? dots(d2 * 19) : {}), opacity: 1 - out, filter: `blur(${out * 14}px)`}}>
           <AbsoluteFill style={{background: '#101216'}} />
-          <div style={{position: 'absolute', top: 560, left: 0, width: 1080, height: 675, transform: `scale(${1.25 - k(f, 52, 120) * 0.2})`, transformOrigin: '50% 50%'}}>
-            <LiveCanvas w={1080} h={675} draw={(c, Wd, Hd) => drawEditor(c, Wd, Hd, f, exportP)} />
+          <div style={{position: 'absolute', top: wide ? 30 : 560, left: wide ? 300 : 0, width: wide ? 1320 : 1080, height: wide ? 825 : 675, transform: `scale(${(wide ? 1.12 : 1.25) - k(f, 52, 120) * 0.2})`, transformOrigin: '50% 50%'}}>
+            <LiveCanvas w={wide ? 1320 : 1080} h={wide ? 825 : 675} draw={(c, Wd, Hd) => drawEditor(c, Wd, Hd, f, exportP)} />
           </div>
           {/* export button + cursor */}
-          <div style={{position: 'absolute', top: 1360, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+          <div style={{position: 'absolute', top: wide ? 900 : 1360, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
             <div style={{transform: `scale(${1 - Math.sin(Math.min(click, 1) * Math.PI) * 0.08})`}}>
               <Pill text="Export 9:16 ↗" color={W.lime} textColor={W.dark} size={46} />
             </div>
           </div>
-          <svg width="54" height="60" viewBox="0 0 24 26" style={{position: 'absolute', left: interpolate(f, [66, 90], [900, 560], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}), top: interpolate(f, [66, 90], [1700, 1400], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})}}>
+          <svg width="54" height="60" viewBox="0 0 24 26" style={{position: 'absolute', left: interpolate(f, [66, 90], wide ? [1500, 1020] : [900, 560], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}), top: interpolate(f, [66, 90], wide ? [1060, 940] : [1700, 1400], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})}}>
             <path d="M2 2 L2 21 L7.5 16 L11 24 L14.5 22.5 L11 15 L18 15 Z" fill="#fff" stroke="#000" strokeWidth="1.2" />
           </svg>
-          <div style={{position: 'absolute', top: 280, left: 0, right: 0, display: 'flex', justifyContent: 'center', opacity: done, transform: `translateY(${(1 - done) * -80}px) scale(${0.8 + done * 0.2})`}}>
+          <div style={{position: 'absolute', top: wide ? 80 : 280, left: 0, right: 0, display: 'flex', justifyContent: 'center', opacity: done, transform: `translateY(${(1 - done) * -80}px) scale(${0.8 + done * 0.2})`}}>
             <Glass style={{padding: '28px 44px', display: 'flex', alignItems: 'center', gap: 22}}>
               <div style={{width: 64, height: 64, borderRadius: 32, background: W.lime, color: W.dark, fontWeight: 800, fontSize: 38, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>✓</div>
               <div>
@@ -371,19 +387,22 @@ const SL = 6;
 export const W7End: React.FC = () => {
   const f = useCurrentFrame();
   const inn = k(f, 0, 14);
-  const wmW = 560;
+  const {width: VW, height: VH} = useVideoConfig();
+  const wide = VW > VH;
+  const CX = VW / 2;
+  const wmW = wide ? 500 : 560;
   const wmH = Math.round(wmW * (389 / 1288));
   const btn = useSpring(70, 13, 140);
   const bokeh = new Array(26).fill(0).map((_, i) => ({
-    x: random(`bx${i}`) * 1080,
-    y: random(`by${i}`) * 1920,
+    x: random(`bx${i}`) * VW,
+    y: random(`by${i}`) * VH,
     r: 30 + random(`br${i}`) * 110,
     c: random(`bc${i}`) > 0.6 ? '255,190,110' : random(`bc${i}`) > 0.3 ? '140,170,255' : '255,240,220',
   }));
   return (
     <AbsoluteFill style={{opacity: inn, background: '#05070d'}}>
       <AbsoluteFill style={{filter: 'blur(16px) brightness(.75)', transform: `scale(${1.15 + f * 0.0008})`}}>
-        <LiveCanvas w={540} h={960} draw={(c, Wd, Hd) => drawCity(c, Wd, Hd)} style={{width: 1080, height: 1920}} />
+        <LiveCanvas w={VW / 2} h={VH / 2} draw={(c, Wd, Hd) => drawCity(c, Wd, Hd)} style={{width: VW, height: VH}} />
       </AbsoluteFill>
       {bokeh.map((b, i) => (
         <div
@@ -404,13 +423,13 @@ export const W7End: React.FC = () => {
       {(() => {
         const s = useSpring(6, 12, 120);
         return (
-          <div style={{position: 'absolute', left: 540 - 90, top: 560, width: 180, height: 180, borderRadius: 44, background: W.lime, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${s}) rotateY(${(1 - s) * 180}deg)`, boxShadow: '0 30px 60px rgba(0,0,0,.5)'}}>
+          <div style={{position: 'absolute', left: CX - 90, top: wide ? 90 : 560, width: 180, height: 180, borderRadius: 44, background: W.lime, display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${s}) rotateY(${(1 - s) * 180}deg)`, boxShadow: '0 30px 60px rgba(0,0,0,.5)'}}>
             <Img src={staticFile('icon-dark.png')} style={{height: 124}} />
           </div>
         );
       })()}
       {/* wordmark slices spin in */}
-      <div style={{position: 'absolute', left: 540 - wmW / 2, top: 800, width: wmW, height: wmH, perspective: 900}}>
+      <div style={{position: 'absolute', left: CX - wmW / 2, top: wide ? 300 : 800, width: wmW, height: wmH, perspective: 900}}>
         {new Array(SL).fill(0).map((_, i) => {
           const s = useSpring(18 + i * 3, 13, 130);
           const sw = wmW / SL;
@@ -434,21 +453,21 @@ export const W7End: React.FC = () => {
           );
         })}
       </div>
-      <div style={{position: 'absolute', top: 1000, width: '100%', textAlign: 'center', fontFamily: W.font, color: '#fff', opacity: k(f, 40, 60)}}>
+      <div style={{position: 'absolute', top: wide ? 480 : 1000, width: '100%', textAlign: 'center', fontFamily: W.font, color: '#fff', opacity: k(f, 40, 60)}}>
         <div style={{fontSize: 26, letterSpacing: 6, opacity: 0.8}}>PRODUCTION · TRAINING · MOBILEGRAPHY</div>
-        <div style={{fontSize: 48, fontWeight: 300, marginTop: 40, lineHeight: 1.35}}>
+        <div style={{fontSize: wide ? 42 : 48, fontWeight: 300, marginTop: wide ? 24 : 40, lineHeight: 1.35}}>
           Hubungi kami untuk bantu
           <br />
           bisnes anda <b style={{fontWeight: 600}}>berkembang.</b>
         </div>
       </div>
-      <div style={{position: 'absolute', top: 1290, left: 540 - wmW / 2, width: wmW, opacity: btn, transform: `translateY(${(1 - btn) * 60}px)`}}>
-        <Glass style={{padding: '30px 0', textAlign: 'center'}} radius={70}>
+      <div style={{position: 'absolute', top: wide ? 730 : 1290, left: CX - wmW / 2, width: wmW, opacity: btn, transform: `translateY(${(1 - btn) * 60}px)`}}>
+        <Glass style={{padding: wide ? '22px 0' : '30px 0', textAlign: 'center'}} radius={70}>
           <div style={{fontSize: 30, opacity: 0.85}}>WhatsApp Dee</div>
           <div style={{fontSize: 56, fontWeight: 600, letterSpacing: 2, color: W.lime}}>011-1620 0864</div>
         </Glass>
       </div>
-      <div style={{position: 'absolute', top: 1530, width: '100%', textAlign: 'center', fontFamily: W.font, color: '#cfd6e6', fontSize: 30, opacity: k(f, 90, 110)}}>
+      <div style={{position: 'absolute', top: wide ? 940 : 1530, width: '100%', textAlign: 'center', fontFamily: W.font, color: '#cfd6e6', fontSize: 30, opacity: k(f, 90, 110)}}>
         @pocket_production · pocketproduction.my
       </div>
     </AbsoluteFill>
