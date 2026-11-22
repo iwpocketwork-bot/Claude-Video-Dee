@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import * as THREE from 'three';
 import {AbsoluteFill, continueRender, delayRender, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {ThreeCanvas} from '@remotion/three';
@@ -34,46 +34,87 @@ const Corner: React.FC<{n: string; dark?: boolean}> = ({n, dark}) => (
 export const M1Intro: React.FC = () => {
   const f = useCurrentFrame();
   const out = v(f, 100, 122);
-  const lineW = 640 * v(f, 6, 40);
+  const lineW = 480 * v(f, 6, 40);
   const icon = v(f, 22, 52);
   const wm = v(f, 38, 70);
   return (
     <AbsoluteFill style={{background: M.black, opacity: 1 - out * 0.4, transform: `scale(${1 + f * 0.0004})`}}>
       <Img
         src={staticFile('icon-white.png')}
-        style={{position: 'absolute', left: 540 - 52, top: 960 - 60 - 160, height: 160, opacity: icon, transform: `translateY(${(1 - icon) * 30}px)`}}
+        style={{position: 'absolute', left: 540 - 39, top: 960 - 50 - 120, height: 120, opacity: icon, transform: `translateY(${(1 - icon) * 30}px)`}}
       />
       <div style={{position: 'absolute', top: 959, left: 540 - lineW / 2, width: lineW, height: 2, background: 'rgba(255,255,255,.55)'}} />
-      <div style={{position: 'absolute', left: 540 - 300, top: 990, width: 600, height: 182, overflow: 'hidden'}}>
-        <Img src={staticFile('wordmark-white.png')} style={{width: 600, transform: `translateY(${(1 - wm) * -105}%)`}} />
+      <div style={{position: 'absolute', left: 540 - 225, top: 985, width: 450, height: 137, overflow: 'hidden'}}>
+        <Img src={staticFile('wordmark-white.png')} style={{width: 450, transform: `translateY(${(1 - wm) * -105}%)`}} />
       </div>
-      <Fade delay={64} style={{position: 'absolute', top: 1240, width: '100%', textAlign: 'center'}}>
+      <Fade delay={64} style={{position: 'absolute', top: 1180, width: '100%', textAlign: 'center'}}>
         <Label color={M.grey}>Production · Training · Mobilegraphy</Label>
       </Fade>
     </AbsoluteFill>
   );
 };
 
-// ---------------------------------------------------------------- 2. Statement (+ 3D sphere)
-const Orb: React.FC = () => {
+// ---------------------------------------------------------------- 2. Statement (+ 3D camera lens / aperture)
+const BLADES = 7;
+const Lens: React.FC = () => {
   const f = useCurrentFrame();
+  const R = 1.02; // inner barrel radius
+  // aperture breathes open/close slowly
+  const open = 0.28 + (0.5 + 0.5 * Math.sin(f / 34 - 1.2)) * 0.55;
+  const twist = f * 0.004;
+  const blades = useMemo(() => new Array(BLADES).fill(0), []);
+  const dir = (ang: number, r: number) => new THREE.Vector2(Math.cos(ang) * r, Math.sin(ang) * r);
   return (
     <>
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[-4, 6, 5]} intensity={2.2} />
-      <directionalLight position={[5, -2, 3]} intensity={0.4} />
-      <group position={[0.55, 1.75, 0]} scale={0.85} rotation={[0.5, f * 0.006, 0.2]}>
-        <mesh>
-          <sphereGeometry args={[1.25, 96, 96]} />
-          <meshStandardMaterial color="#e9e6dd" roughness={0.55} metalness={0} />
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[-4, 6, 6]} intensity={2.4} />
+      <directionalLight position={[5, -3, 3]} intensity={0.6} />
+      <group position={[0.35, 1.7, 0]} scale={0.95} rotation={[0.28 + Math.sin(f / 60) * 0.06, -0.38 + Math.sin(f / 48) * 0.12, 0]}>
+        {/* barrel */}
+        <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, -0.3]}>
+          <cylinderGeometry args={[1.32, 1.32, 0.7, 128, 1, true]} />
+          <meshStandardMaterial color="#d6d1c6" metalness={0.35} roughness={0.38} side={THREE.DoubleSide} />
         </mesh>
-        <mesh rotation={[Math.PI / 2.3, 0, f * 0.01]}>
-          <torusGeometry args={[1.85, 0.012, 16, 200]} />
-          <meshBasicMaterial color={M.ink} />
+        {/* knurled focus ring */}
+        {new Array(90).fill(0).map((_, i) => {
+          const ang = (i / 90) * Math.PI * 2 + f * 0.003;
+          return (
+            <mesh key={i} position={[Math.cos(ang) * 1.335, Math.sin(ang) * 1.335, -0.42]} rotation={[0, 0, ang]}>
+              <boxGeometry args={[0.02, 0.03, 0.32]} />
+              <meshStandardMaterial color="#1c1c1c" roughness={0.6} />
+            </mesh>
+          );
+        })}
+        {/* front rims */}
+        <mesh position={[0, 0, 0.05]}>
+          <torusGeometry args={[1.32, 0.07, 24, 160]} />
+          <meshStandardMaterial color="#ece8de" metalness={0.3} roughness={0.3} />
         </mesh>
-        <mesh position={[Math.cos(f * 0.03) * 1.85, Math.sin(f * 0.03) * 0.5, Math.sin(f * 0.03) * 1.75]}>
-          <sphereGeometry args={[0.08, 24, 24]} />
-          <meshBasicMaterial color={M.ink} />
+        <mesh position={[0, 0, 0.02]}>
+          <ringGeometry args={[R, 1.3, 160]} />
+          <meshStandardMaterial color="#141414" roughness={0.5} />
+        </mesh>
+        {/* aperture blades */}
+        {blades.map((_, i) => {
+          const a0 = (i / BLADES) * Math.PI * 2 + twist;
+          const a1 = ((i + 1) / BLADES) * Math.PI * 2 + twist;
+          const sh = new THREE.Shape([dir(a0, open * R), dir(a1, open * R), dir(a1 + 1.05, R * 1.02), dir(a0 + 1.05, R * 1.02)]);
+          const geo = new THREE.ShapeGeometry(sh);
+          return (
+            <group key={i} position={[0, 0, -0.05 + i * 0.004]}>
+              <mesh geometry={geo}>
+                <meshStandardMaterial color={i % 2 ? '#262626' : '#2e2e2e'} metalness={0.6} roughness={0.35} side={THREE.DoubleSide} />
+              </mesh>
+              <lineSegments geometry={new THREE.EdgesGeometry(geo)}>
+                <lineBasicMaterial color="#5a5a5a" />
+              </lineSegments>
+            </group>
+          );
+        })}
+        {/* glass element with soft reflection */}
+        <mesh position={[0, 0, 0.06]} scale={[1, 1, 0.22]}>
+          <sphereGeometry args={[1.02, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <meshPhysicalMaterial color="#ffffff" transparent opacity={0.12} roughness={0.05} metalness={0.1} clearcoat={1} />
         </mesh>
       </group>
     </>
@@ -88,7 +129,7 @@ export const M2Statement: React.FC = () => {
     <Panel bg={M.cream}>
       <AbsoluteFill style={{opacity: v(f, 10, 40)}}>
         <ThreeCanvas width={width} height={height} camera={{fov: 40, position: [0, 0, 12]}}>
-          <Orb />
+          <Lens />
         </ThreeCanvas>
       </AbsoluteFill>
       <Corner n="01" />
