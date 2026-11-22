@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {C, clamp, FONT, p} from '../common';
+import {C, clamp, FONT, p, useWide} from '../common';
 
 // Topik latihan (dari website pocketproduction.my)
 const COURSES = [
@@ -24,6 +24,7 @@ export const S5bTraining: React.FC = () => {
   const tag = spring({frame: f - 8, fps, config: {damping: 12}});
   const h1 = spring({frame: f - 12, fps, config: {damping: 13}});
   const h2 = spring({frame: f - 18, fps, config: {damping: 11, stiffness: 140}});
+  const wide = useWide();
   const spin = interpolate(f, [16, 125], [-120, 70]);
 
   return (
@@ -33,11 +34,11 @@ export const S5bTraining: React.FC = () => {
           background: C.lime,
           backgroundImage: 'linear-gradient(rgba(0,0,0,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.06) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          clipPath: `circle(${wipe * 1500}px at 540px 960px)`,
+          clipPath: `circle(${wipe * 1500}px at ${wide ? 960 : 540}px ${wide ? 540 : 960}px)`,
         }}
       >
         {/* heading */}
-        <div style={{position: 'absolute', top: 230, width: '100%', textAlign: 'center', fontFamily: FONT, color: C.dark}}>
+        <div style={{position: 'absolute', top: wide ? 150 : 230, left: wide ? 110 : 0, width: wide ? 760 : '100%', textAlign: wide ? 'left' : 'center', fontFamily: FONT, color: C.dark}}>
           <div
             style={{
               display: 'inline-block',
@@ -69,8 +70,8 @@ export const S5bTraining: React.FC = () => {
           <div
             style={{
               position: 'absolute',
-              left: 540,
-              top: 1060,
+              left: wide ? 1330 : 540,
+              top: wide ? 560 : 1060,
               transformStyle: 'preserve-3d',
               transform: `rotateX(-10deg) rotateY(${spin}deg)`,
             }}
@@ -117,7 +118,7 @@ export const S5bTraining: React.FC = () => {
         </AbsoluteFill>
 
         {/* audience + promise */}
-        <div style={{position: 'absolute', top: 1430, width: '100%', display: 'flex', justifyContent: 'center', gap: 22}}>
+        <div style={{position: 'absolute', top: wide ? 700 : 1430, left: wide ? 110 : 0, width: wide ? 760 : '100%', display: 'flex', justifyContent: wide ? 'flex-start' : 'center', gap: 22}}>
           {AUD.map((a, i) => {
             const s = spring({frame: f - 50 - i * 5, fps, config: {damping: 10, stiffness: 170}});
             return (
@@ -143,9 +144,11 @@ export const S5bTraining: React.FC = () => {
         <div
           style={{
             position: 'absolute',
-            top: 1580,
-            width: '100%',
-            textAlign: 'center',
+            top: wide ? 830 : 1580,
+            left: wide ? 110 : 0,
+            width: wide ? 900 : '100%',
+            whiteSpace: 'nowrap',
+            textAlign: wide ? 'left' : 'center',
             fontFamily: FONT,
             fontWeight: 800,
             fontSize: 44,
@@ -159,10 +162,10 @@ export const S5bTraining: React.FC = () => {
         <div
           style={{
             position: 'absolute',
-            top: 1660,
-            left: '50%',
+            top: wide ? 910 : 1660,
+            left: wide ? 110 : '50%',
             width: 560 * p(f, 74, 92),
-            transform: 'translateX(-50%)',
+            transform: wide ? 'none' : 'translateX(-50%)',
             height: 6,
             borderRadius: 3,
             background: C.dark,

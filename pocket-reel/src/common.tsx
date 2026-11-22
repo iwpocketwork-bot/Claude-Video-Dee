@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Easing, interpolate, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 
 // ===== Brand palette (tukar di sini jika warna jenama berbeza) =====
 export const C = {
@@ -29,6 +29,19 @@ export const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as co
 /** progress 0→1 between frames a and b */
 export const p = (f: number, a: number, b: number, e = expo) =>
   interpolate(f, [a, b], [0, 1], {...clamp, easing: e});
+
+/** true for the 16:9 website version */
+export const useWide = () => {
+  const {width, height} = useVideoConfig();
+  return width > height;
+};
+
+/** Places a 1080x1920 portrait layout in the centre of a landscape frame (no-op in portrait). */
+export const Stage: React.FC<{dy?: number; children: React.ReactNode}> = ({dy = 0, children}) => {
+  const {width, height} = useVideoConfig();
+  if (width <= height) return <>{children}</>;
+  return <div style={{position: 'absolute', left: (width - 1080) / 2, top: (height - 1920) / 2 + dy, width: 1080, height: 1920}}>{children}</div>;
+};
 
 export const DarkBg: React.FC<{speed?: number}> = ({speed = 3}) => {
   const f = useCurrentFrame();

@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import * as THREE from 'three';
 import {AbsoluteFill, continueRender, delayRender, random, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {ThreeCanvas} from '@remotion/three';
-import {C, DarkBg, FONT, p} from '../common';
+import {C, DarkBg, FONT, p, useWide} from '../common';
 
 // Logo sebenar diekstrud jadi 3D: banyak lapisan tekstur logo disusun ke belakang.
 const LAYERS = 26;
@@ -26,6 +26,7 @@ const useTexture = (src: string) => {
 
 const Logo3D: React.FC = () => {
   const f = useCurrentFrame();
+  const wideL = useWide();
   const {fps} = useVideoConfig();
   const tex = useTexture(staticFile('logo-white.png'));
   const s = spring({frame: f - 4, fps, config: {damping: 13, stiffness: 90}});
@@ -48,7 +49,7 @@ const Logo3D: React.FC = () => {
       <ambientLight intensity={0.7} />
       <directionalLight position={[3, 5, 6]} intensity={2.6} />
       <pointLight position={[-4, 2, 3]} intensity={50} color={C.lime} />
-      <group position={[0, 2.55, 0]} rotation={[rx, ry, 0]} scale={0.4 + s * 0.6}>
+      <group position={wideL ? [-1.85, 0.2, 0] : [0, 2.55, 0]} rotation={[rx, ry, 0]} scale={(0.4 + s * 0.6) * (wideL ? 1.3 : 1)}>
         {tex &&
           new Array(LAYERS).fill(0).map((_, i) => {
             const t = i / (LAYERS - 1);
@@ -96,13 +97,14 @@ export const S9End: React.FC = () => {
   const btn = spring({frame: f - 50, fps, config: {damping: 10}});
   const num = spring({frame: f - 60, fps, config: {damping: 12}});
   const shine = ((f - 70) % 60) / 60;
+  const wide = useWide();
   return (
     <AbsoluteFill>
       <DarkBg speed={2} />
       <ThreeCanvas width={width} height={height} camera={{fov: 50, position: [0, 0, 10]}}>
         <Logo3D />
       </ThreeCanvas>
-      <div style={{position: 'absolute', top: 760, width: '100%', textAlign: 'center', fontFamily: FONT, color: '#fff'}}>
+      <div style={{position: 'absolute', top: wide ? 110 : 760, left: wide ? 930 : 0, width: wide ? 940 : '100%', textAlign: 'center', fontFamily: FONT, color: '#fff'}}>
         <Pop delay={14} style={{fontSize: 58, fontWeight: 600}}>
           Hubungi kami untuk bantu
         </Pop>
@@ -121,7 +123,7 @@ export const S9End: React.FC = () => {
         {/* WhatsApp CTA */}
         <div
           style={{
-            margin: '64px auto 0',
+            margin: wide ? '36px auto 0' : '64px auto 0',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -157,7 +159,7 @@ export const S9End: React.FC = () => {
         </div>
         <div
           style={{
-            marginTop: 34,
+            marginTop: wide ? 18 : 34,
             fontSize: 92,
             fontWeight: 900,
             letterSpacing: 2,
@@ -167,7 +169,7 @@ export const S9End: React.FC = () => {
         >
           011-1620 0864
         </div>
-        <Pop delay={72} style={{fontSize: 40, fontWeight: 600, marginTop: 36, color: '#cfcfcf'}}>
+        <Pop delay={72} style={{fontSize: wide ? 34 : 40, fontWeight: 600, marginTop: wide ? 18 : 36, color: '#cfcfcf'}}>
           @pocket_production · pocketproduction.my
         </Pop>
       </div>

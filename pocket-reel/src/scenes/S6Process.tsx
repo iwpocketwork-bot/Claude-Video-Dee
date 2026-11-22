@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {C, clamp, Cursor, FONT, GridBg, inOut, p} from '../common';
+import {C, clamp, Cursor, FONT, GridBg, inOut, p, useWide} from '../common';
 
 const STEPS = [
   {t: 'Konsultasi', icon: 'M4 5 h16 v11 h-9 l-5 4 v-4 h-2 Z'},
@@ -19,7 +19,9 @@ export const S6Process: React.FC = () => {
   // cursor visits each step
   const visit = [28, 40, 52, 64];
   const idx = visit.filter((v) => f >= v).length - 1;
-  const stepX = (i: number) => 60 + 120 + i * 230 - 480 + 540; // absolute x of item centre
+  const wide = useWide();
+  const CXc = wide ? 960 : 540;
+  const stepX = (i: number) => 60 + 120 + i * 230 - 480 + CXc; // absolute x of item centre
   const curT = interpolate(f, [24, ...visit], [0, 0, 1, 2, 3], clamp);
   const curX = interpolate(curT, [0, 1, 2, 3], [stepX(0), stepX(1), stepX(2), stepX(3)]) + 10;
   const tilt = p(f, 30, 84, inOut);
@@ -28,7 +30,7 @@ export const S6Process: React.FC = () => {
   return (
     <AbsoluteFill style={{opacity: 1 - ex}}>
       <GridBg />
-      <div style={{position: 'absolute', top: 430, width: '100%', textAlign: 'center', fontFamily: FONT, color: '#fff', opacity: head, transform: `translateY(${(1 - head) * 50}px)`}}>
+      <div style={{position: 'absolute', top: wide ? 130 : 430, width: '100%', textAlign: 'center', fontFamily: FONT, color: '#fff', opacity: head, transform: `translateY(${(1 - head) * 50}px)`}}>
         <div style={{fontSize: 64, fontWeight: 600, color: '#bbb'}}>Dari idea ke hasil —</div>
         <div style={{fontSize: 100, fontWeight: 900, letterSpacing: -2}}>
           kami urus <span style={{color: C.lime}}>semua.</span>
@@ -94,7 +96,7 @@ export const S6Process: React.FC = () => {
             })}
           </div>
           <div style={{position: 'absolute', left: 0, top: 0, width: '100%', height: '100%'}}>
-            {f > 24 && <Cursor x={curX} y={1050} color={C.ink} />}
+            {f > 24 && <Cursor x={curX} y={wide ? 630 : 1050} color={C.ink} />}
           </div>
         </AbsoluteFill>
       </AbsoluteFill>

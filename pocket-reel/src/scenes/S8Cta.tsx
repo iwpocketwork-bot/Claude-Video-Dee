@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
-import {C, clamp, FONT, p} from '../common';
+import {C, clamp, FONT, p, Stage} from '../common';
 
 const TEXT = 'Hubungi Kami';
 
@@ -17,6 +17,7 @@ export const S8Cta: React.FC = () => {
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{background: '#1b1c20'}} />
+      <Stage>
       {/* expanding white liquid */}
       <div
         style={{
@@ -96,6 +97,7 @@ export const S8Cta: React.FC = () => {
           }}
         />
       ))}
+      </Stage>
     </AbsoluteFill>
   );
 };
