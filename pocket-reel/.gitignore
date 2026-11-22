@@ -1,3 +1,4 @@
-node_modules/
+node_modules
 out/*
 !out/PocketProduction_Reel_9x16_v6.mp4
+!out/PocketProduction_Reel_Minimal_9x16.mp4
