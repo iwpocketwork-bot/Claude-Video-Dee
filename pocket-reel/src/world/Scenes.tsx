@@ -256,7 +256,7 @@ export const W4Services: React.FC = () => {
               </div>
             );
           })}
-          <div style={{borderTop: '1px solid rgba(255,255,255,.15)', paddingTop: 22, fontSize: 28, opacity: 0.75}}>6 tahun pengalaman</div>
+          <div style={{borderTop: '1px solid rgba(255,255,255,.15)', paddingTop: 22, fontSize: 28, opacity: 0.75}}>26 tahun pengalaman</div>
         </Glass>
       </Float3D>
     </AbsoluteFill>
