@@ -63,8 +63,8 @@ const Headlines: React.FC = () => {
         <div style={{position: 'relative', display: 'inline-block'}}>
           <Said from={4} to={4} size={120} italic weight={900} />
           {g >= W(5) && <Strike at={W(5)} thick={14} />}
-          <Stamp at={W(7)} text="NOBODY BELIEVES IT" size={30} rot={-8} style={{left: 360, top: -10}} />
         </div>
+        <Stamp at={W(7)} text="NOBODY BELIEVES IT" size={30} rot={-8} style={{left: 560, top: 40}} />
       </Block>
       <Block from={SEC.b} to={SEC.c} style={{left: L, right: L, top: 210}}>
         <Label>EMPTY WORDS</Label>
@@ -126,19 +126,19 @@ const Bottom: React.FC = () => {
       </Block>
 
       <Block from={SEC.b} to={SEC.c} style={{left: 0, right: 0, top: Z, height: 470}}>
-        <div style={{position: 'absolute', left: 300, top: 120, width: 480, height: 200, border: `4px dashed ${P.ink}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: k(g, W(23), W(23) + 8)}}>
+        <div style={{position: 'absolute', left: 290, top: 262, width: 500, height: 150, border: `4px dashed ${P.ink}`, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', opacity: k(g, W(23), W(23) + 8)}}>
           <Label>REAL PROOF</Label>
-          <div style={{fontFamily: P.type, fontSize: 48, color: P.inkSoft, marginTop: 10}}>(none)</div>
+          <div style={{fontFamily: P.type, fontSize: 44, color: P.inkSoft, marginTop: 6}}>(none)</div>
         </div>
         {BUZZ.map((b, n) => {
           const s = useSpr(g - W(b.i), 9, 170);
-          const x0 = 20 + n * 255;
-          const tx = interpolate(hide, [0, 1], [0, 330 - x0 + (n - 1.5) * 50]) + reveal * (n - 1.5) * 520;
-          const ty = interpolate(hide, [0, 1], [0, 90]) + reveal * 600;
+          const x0 = 30 + n * 258;
+          const tx = 0;
+          const ty = hide * 0;
           const struck = W(19) + n * 4;
           return (
-            <div key={n} style={{position: 'absolute', left: x0, top: 60, transform: `translate(${tx}px, ${ty}px) scale(${s}) rotate(${(1 - s) * 40 + reveal * (n - 1.5) * 50}deg)`}}>
-              <Burst size={250} fill={b.fill} rot={b.rot}>
+            <div key={n} style={{position: 'absolute', left: x0, top: 10, opacity: 1 - reveal * 0.55, transform: `translate(${tx}px, ${ty}px) scale(${s}) rotate(${(1 - s) * 40}deg)`}}>
+              <Burst size={240} fill={b.fill} rot={b.rot}>
                 {b.txt}
               </Burst>
               {g >= struck && (
@@ -197,7 +197,7 @@ const Bottom: React.FC = () => {
           <Label style={{color: P.inkSoft}}>ADJECTIVES</Label>
         </div>
         {g >= W(82) && (
-          <div style={{position: 'absolute', left: 0, right: 0, top: -10, bottom: -40, background: P.paper, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, opacity: k(g, W(82), W(82) + 10)}}>
+          <div style={{position: 'absolute', left: 0, right: 0, top: 10, height: 330, background: P.paper, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, opacity: k(g, W(82), W(82) + 10)}}>
             <Clock size={260} f={g} />
             <div>
               <Said from={82} to={84} size={84} italic accent={{84: {color: P.red}}} />
@@ -207,7 +207,7 @@ const Bottom: React.FC = () => {
         )}
       </Block>
 
-      <Block from={SEC.e} to={SEC.f} style={{left: L, right: L, top: Z - 20}}>
+      <Block from={SEC.e} to={SEC.f} style={{left: L, right: L, top: Z + 12}}>
         <div style={{display: 'flex', fontFamily: P.sans, fontWeight: 700, letterSpacing: 5, fontSize: 22, borderBottom: `3px solid ${P.ink}`, paddingBottom: 8}}>
           <div style={{flex: 1}}>DON'T TELL THEM</div>
           <div style={{flex: 1.3}}>TELL / SHOW THEM</div>
@@ -220,7 +220,7 @@ const Bottom: React.FC = () => {
           const cs = useSpr(g - W(r.c), 12, 180);
           const ps = useSpr(g - W(r.p), 13, 160);
           return (
-            <div key={i} style={{display: 'flex', alignItems: 'center', height: 128, borderBottom: `2px solid ${P.ink}`}}>
+            <div key={i} style={{display: 'flex', alignItems: 'center', height: 122, borderBottom: `2px solid ${P.ink}`}}>
               <div style={{flex: 1, opacity: cs}}>
                 <span style={{position: 'relative', display: 'inline-block', fontFamily: P.serif, fontWeight: 800, fontSize: 56, color: P.inkSoft}}>
                   {r.claim}
@@ -228,21 +228,21 @@ const Bottom: React.FC = () => {
                 </span>
               </div>
               <div style={{flex: 1.3, position: 'relative', opacity: ps, transform: `translateX(${(1 - ps) * 40}px)`}}>
-                <div style={{fontFamily: P.serif, fontWeight: 900, fontSize: 52}}>{r.proof}</div>
-                <Stamp at={WE(r.pe) - 6} text="✓ PROOF" size={22} rot={-6} style={{right: 0, top: -34}} />
+                <div style={{fontFamily: P.serif, fontWeight: 900, fontSize: 48, lineHeight: 1.1}}>{r.proof}</div>
+                <Stamp at={WE(r.pe) - 6} text="✓ PROOF" size={20} rot={-4} style={{left: 0, top: 60}} />
               </div>
             </div>
           );
         })}
       </Block>
 
-      <Block from={SEC.f} to={SEC.g} style={{left: -40, right: -40, top: Z + 10, height: 420}}>
-        <div style={{position: 'absolute', left: 0, right: 0, top: 0, textAlign: 'center', fontFamily: P.serif, fontWeight: 900, fontSize: 170, lineHeight: 0.92, letterSpacing: -4, opacity: k(g, W(122), W(122) + 8) * (1 - focus * 0.75), filter: `blur(${focus * 16}px)`}}>
+      <Block from={SEC.f} to={SEC.g} style={{left: -40, right: -40, top: Z + 40, height: 400}}>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 0, textAlign: 'center', fontFamily: P.serif, fontWeight: 900, fontSize: 150, lineHeight: 0.92, letterSpacing: -4, opacity: k(g, W(122), W(122) + 8) * (1 - focus * 0.85), filter: `blur(${focus * 16}px)`}}>
           PREMIUM
           <br />
           LUXURY
         </div>
-        <div style={{position: 'absolute', left: 0, right: 0, top: 130, display: 'flex', justifyContent: 'center', opacity: focus, filter: `blur(${(1 - focus) * 12}px)`}}>
+        <div style={{position: 'absolute', left: 0, right: 0, top: 100, display: 'flex', justifyContent: 'center', opacity: focus, filter: `blur(${(1 - focus) * 12}px)`}}>
           <div style={{border: `5px solid ${P.red}`, padding: '14px 40px', fontFamily: P.sans, fontWeight: 700, letterSpacing: 12, fontSize: 76, color: P.red, background: P.paper}}>PROOF</div>
         </div>
       </Block>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Easing, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {WORDS} from './words';
 
 // ===== Style 05 "Iklan Cetak Klasik" — tokens =====
@@ -135,7 +135,7 @@ export const Masthead: React.FC<{dark?: boolean; wide?: boolean}> = ({dark, wide
       <div style={{height: 3, background: c}} />
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', fontSize: 22, letterSpacing: 4, fontWeight: 500}}>
         <span>COPYWRITING NOTES</span>
-        <span style={{fontFamily: P.serif, fontWeight: 900, fontStyle: 'italic', fontSize: 30, letterSpacing: 0}}>Pocket Production</span>
+        <Img src={staticFile(dark ? 'logo-white.png' : 'logo-dark.png')} style={{height: 52}} />
         <span>NO. 01</span>
       </div>
       <div style={{height: 1, background: c}} />
