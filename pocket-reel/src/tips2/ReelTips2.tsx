@@ -94,7 +94,7 @@ const CUES: Cue[] = [
   [W(98), 'min_chime', 0.45], // brand
 ];
 
-export const ReelTips2: React.FC = () => {
+export const ReelTips2: React.FC<{music?: string}> = ({music = MUSIC_FILE}) => {
   const [h] = useState(() => delayRender('fonts'));
   useEffect(() => {
     Promise.all(['400 40px "DM Sans"', '500 40px "DM Sans"', '700 40px "DM Sans"', '800 40px "DM Sans"', '400 20px "JetBrains Mono"', '700 20px "JetBrains Mono"'].map((x) => document.fonts.load(x))).then(() =>
@@ -103,7 +103,7 @@ export const ReelTips2: React.FC = () => {
   }, [h]);
   return (
     <AbsoluteFill style={{background: '#000'}}>
-      <Audio src={staticFile(MUSIC_FILE)} volume={musicVolume} />
+      <Audio src={staticFile(music)} volume={musicVolume} />
       <Audio src={staticFile('vo/vo3_takeB.mp3')} volume={1} />
       {CUES.map(([fr, name, vol], i) => (
         <Sequence key={i} from={fr} durationInFrames={75} layout="none">
