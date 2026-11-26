@@ -6,6 +6,7 @@ import {ReelWorld} from './world/ReelWorld';
 import {ReelTips, TIPS_DURATION} from './tips/ReelTips';
 import {ReelTips2} from './tips2/ReelTips2';
 import {TOTAL as TIPS2_TOTAL} from './tips2/timing';
+import {ReelPremium, PREMIUM_TOTAL} from './premium/ReelPremium';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -23,5 +24,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="PocketTipsVO" component={ReelTips2} durationInFrames={TIPS2_TOTAL} fps={30} width={1080} height={1920} defaultProps={{music: 'music.mp3'}} />
     <Composition id="PocketTipsVOSubClair" component={ReelTips2} durationInFrames={TIPS2_TOTAL} fps={30} width={1080} height={1920} defaultProps={{music: 'music_subclair.mp3'}} />
     <Composition id="PocketTipsVOSubClairWide" component={ReelTips2} durationInFrames={TIPS2_TOTAL} fps={30} width={1920} height={1080} defaultProps={{music: 'music_subclair.mp3'}} />
+    {/* Style 05 — Iklan Cetak Klasik: Berhenti panggil produk anda premium */}
+    <Composition id="PocketPremium" component={ReelPremium} durationInFrames={PREMIUM_TOTAL} fps={30} width={1080} height={1920} />
   </>
 );
