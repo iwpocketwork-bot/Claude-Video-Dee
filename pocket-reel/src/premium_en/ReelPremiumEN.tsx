@@ -14,7 +14,11 @@ import {io, k, Masthead, P, Paper, PrintCaption, Said, Stamp, Strike, useSpr, W,
 
 // Style 05b — original talking-head video kept, print-ad graphics layered around it (English, synced to his words)
 const VIDEO_END = Math.round(52.33 * 30);
-export const PREMIUM_EN_TOTAL = VIDEO_END + 150; // + 5s end card
+const OUTRO = 255; // 8.5s end card
+export const PREMIUM_EN_TOTAL = VIDEO_END + OUTRO;
+// Source credit (unverified attribution found online — change here if the creator's handle differs)
+export const CREDIT_VIDEO = 'Prime Brains | The Business Minds';
+export const CREDIT_AD = 'Rolls-Royce headline by David Ogilvy (1958)';
 const L = 70;
 
 // video frame geometry (source 720x1280; picture area y 328–952, crop above burned-in captions at ~y850)
@@ -151,21 +155,21 @@ const Bottom: React.FC = () => {
         })}
       </Block>
 
-      <Block from={SEC.c} to={SEC.d} style={{left: 40, right: 40, top: Z - 10, display: 'flex', gap: 24}}>
+      <Block from={SEC.c} to={SEC.d} style={{left: 40, right: 40, top: Z + 14, display: 'flex', gap: 24}}>
         {[0, 1].map((side) => {
           const s = useSpr(g - (side === 0 ? W(36) : W(45)) + 4, 15, 130);
           return (
             <div key={side} style={{flex: 1, opacity: s, transform: `translateY(${(1 - s) * 60}px)`}}>
               <Label style={{marginBottom: 10, fontSize: 20}}>{side === 0 ? 'NORMAL AD' : 'GREAT AD'}</Label>
-              <div style={{position: 'relative', background: '#f6f1e5', border: `3px solid ${P.ink}`, boxShadow: '8px 10px 0 rgba(40,30,10,.18)', padding: 20, height: 400, boxSizing: 'border-box'}}>
+              <div style={{position: 'relative', background: '#f6f1e5', border: `3px solid ${P.ink}`, boxShadow: '8px 10px 0 rgba(40,30,10,.18)', padding: 18, height: 340, boxSizing: 'border-box'}}>
                 {side === 0 ? (
                   <>
                     <Car w={430} draw={k(g, W(41), W(44))} color={P.inkSoft} />
-                    <div style={{fontFamily: P.sans, fontWeight: 500, fontSize: 40, color: P.inkSoft, marginTop: 30}}>
+                    <div style={{fontFamily: P.sans, fontWeight: 500, fontSize: 40, color: P.inkSoft, marginTop: 14}}>
                       {g >= W(41) ? '"This car ' : ''}
                       {g >= W(43) ? 'is silent."' : ''}
                     </div>
-                    <Stamp at={W(44) + 8} text="FORGETTABLE" size={26} rot={10} style={{right: 14, bottom: 20}} />
+                    <Stamp at={W(44) + 8} text="FORGETTABLE" size={24} rot={-5} style={{left: 18, bottom: 10}} />
                   </>
                 ) : (
                   <>
@@ -290,7 +294,7 @@ const Framed: React.FC = () => {
       </div>
       <div style={{display: 'flex', justifyContent: 'space-between', fontFamily: P.sans, fontSize: 18, letterSpacing: 3, color: P.inkSoft, paddingTop: 10}}>
         <span>FIG. 1 — ON ADVERTISING</span>
-        <span>POCKET PRODUCTION</span>
+        <span>VIDEO: {CREDIT_VIDEO.toUpperCase()}</span>
       </div>
     </div>
   );
@@ -313,8 +317,16 @@ const EndCard: React.FC = () => {
       </div>
       <div style={{position: 'absolute', left: 0, right: 0, top: 1000, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: logo, transform: `scale(${0.85 + logo * 0.15})`}}>
         <div style={{fontFamily: P.sans, fontWeight: 500, letterSpacing: 8, fontSize: 36}}>TALK TO</div>
-        <Img src={staticFile('logo-dark.png')} style={{width: 640, marginTop: 24}} />
+        <Img src={staticFile('logo-dark.png')} style={{width: 420, marginTop: 22}} />
         <div style={{fontFamily: P.type, fontSize: 36, marginTop: 40}}>WhatsApp Dee · 011-1620 0864</div>
+      </div>
+      <div style={{position: 'absolute', left: L, right: L, top: 1660, textAlign: 'center', fontFamily: P.sans, fontSize: 22, letterSpacing: 2, color: P.inkSoft, lineHeight: 1.6, opacity: k(g, VIDEO_END + 70, VIDEO_END + 90)}}>
+        <div style={{height: 1, background: P.inkSoft, opacity: 0.5, marginBottom: 14}} />
+        Video source: {CREDIT_VIDEO}
+        <br />
+        {CREDIT_AD}
+        <br />
+        Graphics by Pocket Production
       </div>
     </AbsoluteFill>
   );
@@ -354,7 +366,7 @@ export const ReelPremiumEN: React.FC = () => {
       <Paper />
       {/* end-card music bed: soft swell after the original audio finishes */}
       <Sequence from={VIDEO_END - 10} layout="none">
-        <Audio src={staticFile('music_subclair.mp3')} volume={(fr) => interpolate(fr, [0, 20, 130, 158], [0, 0.35, 0.35, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
+        <Audio src={staticFile('music_subclair.mp3')} volume={(fr) => interpolate(fr, [0, 20, OUTRO - 20, OUTRO + 8], [0, 0.35, 0.35, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})} />
       </Sequence>
       {CUES.map(([fr, name, vol], i) => (
         <Sequence key={i} from={fr} durationInFrames={75} layout="none">
