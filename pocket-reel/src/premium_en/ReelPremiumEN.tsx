@@ -229,7 +229,7 @@ const Bottom: React.FC = () => {
               </div>
               <div style={{flex: 1.3, position: 'relative', opacity: ps, transform: `translateX(${(1 - ps) * 40}px)`}}>
                 <div style={{fontFamily: P.serif, fontWeight: 900, fontSize: 48, lineHeight: 1.1}}>{r.proof}</div>
-                <Stamp at={WE(r.pe) - 6} text="✓ PROOF" size={20} rot={-4} style={{left: 0, top: 60}} />
+                <Stamp at={WE(r.pe) - 6} text="✓ PROOF" size={20} rot={-6} style={{right: -6, top: 10}} />
               </div>
             </div>
           );

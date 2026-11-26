@@ -86,14 +86,14 @@ export const Said: React.FC<{from: number; to: number; size: number; color?: str
   );
 };
 
-/** hand-drawn red marker strike that draws across its parent */
+/** red marker strike: always spans the full word, through its middle */
 export const Strike: React.FC<{at: number; color?: string; thick?: number; tilt?: number}> = ({at, color = P.red, thick = 12, tilt = -4}) => {
   const g = useCurrentFrame();
   const p = k(g, at, at + 8, io);
   return (
-    <svg style={{position: 'absolute', left: '-4%', top: '42%', width: '108%', height: 40, overflow: 'visible', transform: `rotate(${tilt}deg)`}} viewBox="0 0 100 10" preserveAspectRatio="none">
-      <path d="M0,6 C20,3 45,8 70,4 S95,5 100,4" fill="none" stroke={color} strokeWidth={thick / 4} strokeLinecap="round" strokeDasharray={110} strokeDashoffset={110 * (1 - p)} vectorEffect="non-scaling-stroke" style={{strokeWidth: thick}} />
-    </svg>
+    <div style={{position: 'absolute', left: '-5%', width: '110%', top: '50%', height: thick, marginTop: -thick / 2, transform: `rotate(${tilt}deg)`, pointerEvents: 'none'}}>
+      <div style={{width: `${p * 100}%`, height: '100%', background: color, borderRadius: thick, opacity: 0.92, boxShadow: `0 0 1px ${color}`}} />
+    </div>
   );
 };
 
