@@ -83,7 +83,7 @@ export const ReelTips2: React.FC = () => {
   }, [h]);
   return (
     <AbsoluteFill style={{background: '#000'}}>
-      <Audio src={staticFile('vo/vo_takeA.mp3')} volume={1} />
+      <Audio src={staticFile('vo/vo3_takeB.mp3')} volume={1} />
       {CUES.map(([fr, name, vol], i) => (
         <Sequence key={i} from={fr} durationInFrames={75} layout="none">
           <Audio src={staticFile(`sfx/${name}.wav`)} volume={vol} />

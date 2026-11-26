@@ -3,7 +3,7 @@ import {AbsoluteFill, Img, interpolate, random, staticFile, useCurrentFrame, use
 import {ThreeCanvas} from '@remotion/three';
 import {Bg, Card, k, Mono, T, useSpr} from '../tips/kit';
 import {PhoneScene} from './Phone3D';
-import {PHRASES, SC, W, WE} from './timing';
+import {PHRASES, SC, TOTAL, W, WE} from './timing';
 import {WORDS} from './words';
 
 const CW = 860;
@@ -327,7 +327,7 @@ export const H6Audio: React.FC = () => {
           </div>
           <div style={{width: 270, height: 170, borderRadius: 26, background: '#fff', boxShadow: '0 20px 40px rgba(10,12,40,.12)', padding: '22px 26px', boxSizing: 'border-box', opacity: c24, transform: `translateY(${(1 - c24) * 40}px)`}}>
             <div style={{fontFamily: T.font, fontSize: 64, fontWeight: 700, color: T.ink}}>24<span style={{fontSize: 28}}> fps</span></div>
-            <Mono style={{color: '#888', fontSize: 18}}>rasa filem</Mono>
+            <Mono style={{color: '#888', fontSize: 18}}>lebih cinematic</Mono>
           </div>
           <div style={{width: 270, height: 170, borderRadius: 26, background: T.ink, boxShadow: '0 20px 40px rgba(10,12,40,.2)', padding: '22px 26px', boxSizing: 'border-box', opacity: c60, transform: `translateY(${(1 - c60) * 40}px)`}}>
             <div style={{fontFamily: T.font, fontSize: 64, fontWeight: 700, color: T.lime}}>60<span style={{fontSize: 28}}> fps</span></div>
@@ -376,15 +376,15 @@ export const H8End: React.FC = () => {
   const bar = k(g, W(93) - 2, W(93) + 10, io); // blue bar grows on "Join"
   const txt = k(g, W(94) - 2, W(94) + 6);
   const brand = useSpr(W(98) - o, 12, 150);
-  const fadeAll = k(g, 1408, 1438);
+  const fadeAll = k(g, TOTAL - 32, TOTAL - 2);
   return (
     <AbsoluteFill>
       <Bg mode="dark" />
       <AbsoluteFill style={{opacity: 1 - fadeAll, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 640, fontFamily: T.font, color: '#fff', textAlign: 'center'}}>
         <VoWords from={90} to={92} offset={o} size={84} color="#fff" accent={{92: T.lime}} />
         <div style={{marginTop: 50, height: 120, display: 'flex', justifyContent: 'center'}}>
-          <div style={{width: 120 + bar * 740, height: 120, borderRadius: 60, background: T.blue, boxShadow: `0 0 70px ${T.blue}aa`, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', transform: `scale(${0.6 + Math.min(1, bar * 2) * 0.4})`}}>
-            <span style={{fontSize: 50, fontWeight: 700, whiteSpace: 'nowrap', opacity: txt, filter: `blur(${(1 - txt) * 8}px)`}}>Training Mobile Filmmaking</span>
+          <div style={{width: 120 + bar * 820, height: 120, borderRadius: 60, background: T.blue, boxShadow: `0 0 70px ${T.blue}aa`, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', transform: `scale(${0.6 + Math.min(1, bar * 2) * 0.4})`}}>
+            <span style={{fontSize: 46, fontWeight: 700, whiteSpace: 'nowrap', opacity: txt, filter: `blur(${(1 - txt) * 8}px)`}}>Training Smartphone Videomaking</span>
           </div>
         </div>
         <div style={{marginTop: 46, display: 'flex', alignItems: 'center', gap: 18, opacity: brand, transform: `translateY(${(1 - brand) * 30}px)`}}>
@@ -404,7 +404,7 @@ export const Header: React.FC<{mode: 'light' | 'dark'}> = ({mode}) => {
   const shrink = k(g, W(9) - 14, W(9) + 2, io); // big → small as the demo starts
   const size = interpolate(shrink, [0, 1], [104, 62]);
   const top = interpolate(shrink, [0, 1], [262, 150]);
-  const fade = 1 - k(g, 1408, 1438);
+  const fade = 1 - k(g, TOTAL - 32, TOTAL - 2);
   const word = (i: number) => k(g, W(i) - 2, W(i) + 7);
   const sp = (i: number, child: React.ReactNode) => (
     <span style={{display: 'inline-block', opacity: word(i), filter: `blur(${(1 - word(i)) * 10}px)`, transform: `translateY(${(1 - word(i)) * 14}px)`, marginRight: '0.24em'}}>{child}</span>
@@ -417,7 +417,7 @@ export const Header: React.FC<{mode: 'light' | 'dark'}> = ({mode}) => {
       <br />
       {sp(
         7,
-        <span style={{background: light ? T.lime : 'transparent', color: light ? T.ink : T.lime, padding: light ? '0 0.16em' : 0, borderRadius: 8}}>telefon je.</span>,
+        <span style={{background: light ? T.lime : 'transparent', color: light ? T.ink : T.lime, padding: light ? '0 0.16em' : 0, borderRadius: 8}}>smartphone je.</span>,
       )}
     </div>
   );
