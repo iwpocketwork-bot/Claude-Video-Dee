@@ -22,5 +22,6 @@ export const RemotionRoot: React.FC = () => (
     {/* Style 04b — Kinetic Explainer v2: ikut rujukan, VO lelaki, telefon 3D realistik */}
     <Composition id="PocketTipsVO" component={ReelTips2} durationInFrames={TIPS2_TOTAL} fps={30} width={1080} height={1920} defaultProps={{music: 'music.mp3'}} />
     <Composition id="PocketTipsVOSubClair" component={ReelTips2} durationInFrames={TIPS2_TOTAL} fps={30} width={1080} height={1920} defaultProps={{music: 'music_subclair.mp3'}} />
+    <Composition id="PocketTipsVOSubClairWide" component={ReelTips2} durationInFrames={TIPS2_TOTAL} fps={30} width={1920} height={1080} defaultProps={{music: 'music_subclair.mp3'}} />
   </>
 );

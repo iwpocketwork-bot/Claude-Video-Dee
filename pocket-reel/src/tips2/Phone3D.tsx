@@ -205,7 +205,8 @@ function drawScreen(c: CanvasRenderingContext2D, img: HTMLImageElement | null, f
 
 const Device: React.FC = () => {
   const f = useCurrentFrame();
-  const {fps} = useVideoConfig();
+  const {fps, width, height} = useVideoConfig();
+  const wide = width > height;
   const img = useImage(staticFile('tips2/photo-portrait.jpg'));
   const {cv, tex} = useMemo(() => {
     const cvv = document.createElement('canvas');
@@ -231,7 +232,7 @@ const Device: React.FC = () => {
 
   const titanium = <meshPhysicalMaterial color="#bdb7ab" metalness={1} roughness={0.32} envMapIntensity={1.3} clearcoat={0.3} />;
   return (
-    <group position={[0, y, 0]} rotation={[rx, ry, rz]} scale={s}>
+    <group position={[wide ? 1.55 : 0, y, 0]} rotation={[rx, ry, rz]} scale={s}>
       {/* titanium frame */}
       <RoundedBox args={[1.0, 2.06, 0.1]} radius={0.12} smoothness={12}>
         {titanium}

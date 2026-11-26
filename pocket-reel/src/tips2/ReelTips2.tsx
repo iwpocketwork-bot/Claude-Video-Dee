@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {AbsoluteFill, Audio, continueRender, delayRender, Easing, interpolate, Sequence, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, continueRender, delayRender, Easing, interpolate, Sequence, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import '@fontsource/dm-sans/400.css';
 import '@fontsource/dm-sans/500.css';
 import '@fontsource/dm-sans/700.css';
@@ -43,6 +43,8 @@ const MODES: [number, 'light' | 'dark'][] = [
 
 const HeaderTrack: React.FC = () => {
   const f = useCurrentFrame();
+  const {width, height} = useVideoConfig();
+  const [cx, cy] = width > height ? [960, 540] : [540, 900];
   let i = 0;
   MODES.forEach(([st], j) => {
     if (f >= st) i = j;
@@ -54,11 +56,11 @@ const HeaderTrack: React.FC = () => {
   return (
     <>
       {wiping && (
-        <AbsoluteFill style={{WebkitMaskImage: `radial-gradient(circle at 540px 900px, transparent ${r}px, #000 ${r + 1}px)`}}>
+        <AbsoluteFill style={{WebkitMaskImage: `radial-gradient(circle at ${cx}px ${cy}px, transparent ${r}px, #000 ${r + 1}px)`}}>
           <Header mode={prev} />
         </AbsoluteFill>
       )}
-      <AbsoluteFill style={wiping ? {clipPath: `circle(${r}px at 540px 900px)`} : undefined}>
+      <AbsoluteFill style={wiping ? {clipPath: `circle(${r}px at ${cx}px ${cy}px)`} : undefined}>
         <Header mode={mode} />
       </AbsoluteFill>
     </>

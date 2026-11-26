@@ -9,6 +9,13 @@ import {WORDS} from './words';
 const CW = 860;
 const CX = (1080 - CW) / 2;
 const io = Easing.bezier(0.65, 0, 0.35, 1);
+/** true for the 16:9 landscape (website) version */
+export const useWide = () => {
+  const {width, height} = useVideoConfig();
+  return width > height;
+};
+/** wipe centre: portrait (540,900) / landscape (960,540) */
+export const useWipeCentre = () => (useWide() ? [960, 540] : [540, 900]);
 
 /** spoken words appear exactly when said (global frame g = local f + offset) */
 export const VoWords: React.FC<{from: number; to: number; offset: number; size: number; color: string; accent?: Record<number, string>; out?: number; style?: React.CSSProperties; breaks?: number[]}> = ({
@@ -51,6 +58,7 @@ export const VoWords: React.FC<{from: number; to: number; offset: number; size: 
 /** karaoke caption pill — current spoken word is bold, the rest grey */
 export const KaraokePill: React.FC = () => {
   const g = useCurrentFrame();
+  const wide = useWide();
   const ph = PHRASES.find(([a, b]) => g >= W(a) - 3 && g <= WE(b) + 8);
   if (!ph) return null;
   const [a, b] = ph;
@@ -67,7 +75,7 @@ export const KaraokePill: React.FC = () => {
     );
   }
   return (
-    <div style={{position: 'absolute', top: 1600, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+    <div style={{position: 'absolute', top: wide ? 975 : 1600, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
       <div
         style={{
           background: '#fff',
@@ -93,11 +101,12 @@ export const KaraokePill: React.FC = () => {
 export const H1Hook: React.FC = () => {
   const f = useCurrentFrame();
   const out = k(f, W(9) - 16, W(9) - 4);
+  const wide = useWide();
   return (
     <AbsoluteFill>
       <Bg mode="light" />
-      <div style={{position: 'absolute', left: 70, top: 140}}>
-        <VoWords from={0} to={3} offset={0} size={80} color={T.ink} out={out} style={{whiteSpace: 'nowrap'}} />
+      <div style={{position: 'absolute', left: wide ? 100 : 70, top: wide ? 80 : 140}}>
+        <VoWords from={0} to={3} offset={0} size={wide ? 64 : 80} color={T.ink} out={out} style={{whiteSpace: 'nowrap'}} />
       </div>
     </AbsoluteFill>
   );
@@ -109,10 +118,11 @@ export const H2Phone: React.FC<{offset: number}> = ({offset}) => {
   const f = useCurrentFrame();
   const g = f + offset;
   const out = k(g, SC.dulu - 4, SC.dulu + 8);
+  const wide = useWide();
   return (
     <AbsoluteFill style={{opacity: 1 - out, filter: `blur(${out * 16}px)`}}>
       {/* soft contact shadow */}
-      <div style={{position: 'absolute', left: 240, top: 1560, width: 600, height: 120, borderRadius: '50%', background: 'rgba(30,30,60,.22)', filter: 'blur(40px)', opacity: k(g, W(4), W(4) + 20)}} />
+      <div style={{position: 'absolute', left: wide ? 1130 : 240, top: wide ? 960 : 1560, width: 600, height: 120, borderRadius: '50%', background: 'rgba(30,30,60,.22)', filter: 'blur(40px)', opacity: k(g, W(4), W(4) + 20)}} />
       <ThreeCanvas width={width} height={height} camera={{fov: 30, position: [0, 0, 7]}} gl={{antialias: true}}>
         <PhoneScene />
       </ThreeCanvas>
@@ -128,16 +138,17 @@ export const H3Dulu: React.FC = () => {
   const clear = k(g, W(33) - 6, W(33) + 4); // "Sebenarnya…" clears the list
   const six = useSpr(W(35) - o, 9, 170);
   const out = k(g, SC.cards - 2, SC.cards + 10);
+  const wide = useWide();
   return (
     <Wipe>
       <Bg mode="dark" />
-      <div style={{position: 'absolute', left: 70, top: 470, opacity: 1 - out}}>
+      <div style={{position: 'absolute', left: wide ? 100 : 70, top: wide ? 270 : 470, opacity: 1 - out}}>
         <VoWords from={22} to={22} offset={o} size={100} color="#fff" out={clear} />
         <div style={{marginTop: 10}}>
           <VoWords from={23} to={32} offset={o} size={78} color="#fff" out={clear} breaks={[26, 28, 30]} accent={{28: T.red, 30: T.red, 32: T.red}} />
         </div>
       </div>
-      <div style={{position: 'absolute', left: 70, top: 640, opacity: 1 - out}}>
+      <div style={{position: 'absolute', left: wide ? 100 : 70, top: wide ? 360 : 640, opacity: 1 - out}}>
         <VoWords from={33} to={33} offset={o} size={56} color="rgba(255,255,255,.6)" style={{fontWeight: 500}} />
         <div style={{display: 'flex', alignItems: 'center', gap: 26, marginTop: 14}}>
           <VoWords from={34} to={37} offset={o} size={104} color="#fff" accent={{35: T.lime, 36: T.lime}} breaks={[34]} />
@@ -145,16 +156,16 @@ export const H3Dulu: React.FC = () => {
         <div
           style={{
             position: 'absolute',
-            left: 380,
-            top: 84,
-            width: 140,
-            height: 140,
+            left: 350,
+            top: 62,
+            width: 118,
+            height: 118,
             borderRadius: 40,
             background: T.lime,
             color: T.ink,
             fontFamily: T.font,
             fontWeight: 800,
-            fontSize: 110,
+            fontSize: 92,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -173,8 +184,9 @@ export const H3Dulu: React.FC = () => {
 export const WIPE_DUR = 16;
 const Wipe: React.FC<{children: React.ReactNode}> = ({children}) => {
   const f = useCurrentFrame();
+  const [cx, cy] = useWipeCentre();
   const r = k(f, 0, WIPE_DUR, io) * 2300;
-  return <AbsoluteFill style={{clipPath: `circle(${r}px at 540px 900px)`}}>{children}</AbsoluteFill>;
+  return <AbsoluteFill style={{clipPath: `circle(${r}px at ${cx}px ${cy}px)`}}>{children}</AbsoluteFill>;
 };
 
 // ======================================================= rule of thirds + window light (light)
@@ -190,11 +202,12 @@ export const H4Cards: React.FC = () => {
   const out = k(g, SC.stabil - 2, SC.stabil + 10);
   const rx = interpolate(aim, [0, 1], [50, 66.6]);
   const ry = interpolate(aim, [0, 1], [50, 38]);
+  const wide = useWide();
   return (
     <Wipe>
       <Bg mode="light" />
       <div style={{opacity: 1 - out}}>
-        <Card delay={6} x={CX} y={560} w={CW} h={484} tilt={[7, -5]}>
+        <Card delay={6} x={wide ? 100 : CX} y={wide ? 280 : 560} w={CW} h={484} tilt={wide ? [7, 8] : [7, -5]}>
           <div style={{position: 'absolute', inset: 0, overflow: 'hidden'}}>
             <Img src={staticFile('tips2/photo.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${1.08 - aim * 0.05})`}} />
           </div>
@@ -221,12 +234,12 @@ export const H4Cards: React.FC = () => {
           <div style={{position: 'absolute', right: 20, top: 20, background: T.lime, color: T.ink, fontFamily: T.mono, fontWeight: 700, fontSize: 24, padding: '6px 14px', borderRadius: 8, opacity: k(g, W(44), W(44) + 6)}}>1/3 ✓</div>
         </Card>
         {/* window light comparison */}
-        <div style={{position: 'absolute', left: CX, top: 1100, width: CW, display: 'flex', gap: 20, opacity: harshOn, transform: `translateY(${(1 - harshOn) * 60}px)`}}>
+        <div style={{position: 'absolute', left: wide ? 1020 : CX, top: wide ? 280 : 1100, width: wide ? 800 : CW, display: 'flex', gap: 20, opacity: harshOn, transform: `translateY(${(1 - harshOn) * 60}px)`}}>
           {[
             {lbl: 'Lampu siling', ok: false, filter: 'contrast(1.55) brightness(.72) saturate(.8) sepia(.25)'},
             {lbl: 'Cahaya tingkap', ok: true, filter: 'none'},
           ].map((sw, i) => (
-            <div key={i} style={{flex: 1, height: 300, borderRadius: 26, overflow: 'hidden', position: 'relative', boxShadow: '0 30px 60px rgba(10,12,40,.25)', opacity: i === 1 ? 0.35 + softOk * 0.65 : 1}}>
+            <div key={i} style={{flex: 1, height: wide ? 484 : 300, borderRadius: 26, overflow: 'hidden', position: 'relative', boxShadow: '0 30px 60px rgba(10,12,40,.25)', opacity: i === 1 ? 0.35 + softOk * 0.65 : 1}}>
               <Img src={staticFile('tips2/photo-portrait.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 18%', filter: sw.filter}} />
               {!sw.ok && <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% -10%, rgba(255,240,200,.35), rgba(0,0,0,.55) 70%)'}} />}
               <div style={{position: 'absolute', left: 18, bottom: 16, fontFamily: T.font, fontWeight: 700, fontSize: 30, color: '#fff', textShadow: '0 2px 10px rgba(0,0,0,.6)'}}>{sw.lbl}</div>
@@ -236,7 +249,7 @@ export const H4Cards: React.FC = () => {
             </div>
           ))}
         </div>
-        <div style={{position: 'absolute', left: 0, right: 0, top: 1440, display: 'flex', justifyContent: 'center'}}>
+        <div style={{position: 'absolute', left: wide ? 1020 : 0, width: wide ? 800 : undefined, right: wide ? undefined : 0, top: wide ? 820 : 1440, display: 'flex', justifyContent: 'center'}}>
           <div style={{background: T.ink, color: T.lime, fontFamily: T.mono, fontWeight: 700, fontSize: 30, padding: '12px 28px', borderRadius: 14, transform: `scale(${free}) rotate(${(1 - free) * 10 - 2}deg)`}}>RM0 · CAHAYA PERCUMA</div>
         </div>
       </div>
@@ -266,27 +279,28 @@ export const H5Stabil: React.FC = () => {
   const bi = Math.min(N - 1, Math.floor(draw * (N - 1)));
   const [bx, by] = pts[bi];
   const pct = Math.round(interpolate(smooth, [0, 1], [38, 4]));
+  const wide = useWide();
   return (
     <Wipe>
       <Bg mode="dark" />
       <div style={{opacity: 1 - out}}>
-        <div style={{position: 'absolute', left: 70, top: 470}}>
+        <div style={{position: 'absolute', left: wide ? 100 : 70, top: wide ? 270 : 470}}>
           <VoWords from={57} to={59} offset={o} size={96} color="#fff" accent={{59: T.lime}} />
         </div>
-        <Mono style={{position: 'absolute', left: 130, top: 760, opacity: k(g, W(51), W(51) + 8)}}>gegaran kamera · {pct}%</Mono>
-        <svg width={TW + 40} height={260} style={{position: 'absolute', left: 110, top: 820, overflow: 'visible'}}>
+        <Mono style={{position: 'absolute', left: wide ? 120 : 130, top: wide ? 450 : 760, opacity: k(g, W(51), W(51) + 8)}}>gegaran kamera · {pct}%</Mono>
+        <svg width={TW + 40} height={260} style={{position: 'absolute', left: wide ? 100 : 110, top: wide ? 500 : 820, overflow: 'visible'}}>
           <line x1={0} y1={120} x2={TW} y2={120} stroke="rgba(255,255,255,.15)" strokeWidth={2} />
           <path d={d} fill="none" stroke={smooth < 0.5 ? T.red : T.lime} strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={5000} strokeDashoffset={5000 * (1 - draw)} opacity={0.9} />
           <circle cx={bx} cy={by} r={30} fill={T.lime} style={{filter: `drop-shadow(0 0 18px ${T.lime})`}} />
         </svg>
         {/* mini graph card like the ref's overshoot card */}
-        <Card delay={W(55) - o} x={620} y={1130} w={360} h={220} tilt={[6, -8]} bg="rgba(255,255,255,.06)">
+        <Card delay={W(55) - o} x={wide ? 1180 : 620} y={wide ? 520 : 1130} w={360} h={220} tilt={[6, -8]} bg="rgba(255,255,255,.06)">
           <Mono style={{position: 'absolute', left: 22, top: 18, fontSize: 18}}>siku rapat · jalan perlahan</Mono>
           <svg width={320} height={140} style={{position: 'absolute', left: 20, top: 56}}>
             <path d="M0,120 C80,120 90,20 160,22 S260,30 320,26" fill="none" stroke={T.lime} strokeWidth={5} strokeDasharray={600} strokeDashoffset={600 * (1 - k(g, W(55) + 6, W(56) + 10))} />
           </svg>
         </Card>
-        <div style={{position: 'absolute', left: 130, top: 1180, background: T.lime, color: T.ink, fontFamily: T.mono, fontWeight: 700, fontSize: 26, padding: '8px 16px', borderRadius: 8, opacity: done, transform: `scale(${0.8 + done * 0.2})`}}>SMOOTH ✓</div>
+        <div style={{position: 'absolute', left: wide ? 120 : 130, top: wide ? 800 : 1180, background: T.lime, color: T.ink, fontFamily: T.mono, fontWeight: 700, fontSize: 26, padding: '8px 16px', borderRadius: 8, opacity: done, transform: `scale(${0.8 + done * 0.2})`}}>SMOOTH ✓</div>
       </div>
     </Wipe>
   );
@@ -304,11 +318,12 @@ export const H6Audio: React.FC = () => {
   const dbS = useSpr(W(65) - o, 13, 160);
   const out = k(g, SC.why - 2, SC.why + 10);
   const bars = 56;
+  const wide = useWide();
   return (
     <Wipe>
       <Bg mode="light" />
       <div style={{opacity: 1 - out}}>
-        <Card delay={4} x={CX} y={560} w={CW} h={250} tilt={[6, -4]}>
+        <Card delay={4} x={wide ? 100 : CX} y={wide ? 300 : 560} w={wide ? 1000 : CW} h={wide ? 320 : 250} tilt={wide ? [6, 6] : [6, -4]}>
           <Mono style={{position: 'absolute', left: 28, top: 22}}>{g < W(63) ? 'audio · mic telefon · 1.5 m' : 'audio · mic klip · 20 cm'}</Mono>
           <div style={{position: 'absolute', left: 28, right: 28, top: 70, bottom: 26, display: 'flex', alignItems: 'center', gap: 5}}>
             {new Array(bars).fill(0).map((_, i) => {
@@ -320,7 +335,7 @@ export const H6Audio: React.FC = () => {
             })}
           </div>
         </Card>
-        <div style={{position: 'absolute', left: CX, top: 850, display: 'flex', gap: 20}}>
+        <div style={{position: 'absolute', left: wide ? 1180 : CX, top: wide ? 230 : 850, display: 'flex', flexDirection: wide ? 'column' : 'row', gap: 20}}>
           <div style={{width: 270, height: 170, borderRadius: 26, background: '#fff', boxShadow: '0 20px 40px rgba(10,12,40,.12)', padding: '22px 26px', boxSizing: 'border-box', opacity: dbS, transform: `translateY(${(1 - dbS) * 40}px)`}}>
             <div style={{fontFamily: T.font, fontSize: 64, fontWeight: 700, color: T.ink}}>{db}</div>
             <Mono style={{color: '#888', fontSize: 18}}>dB · suara</Mono>
@@ -345,6 +360,7 @@ export const H7Why: React.FC = () => {
   const o = SC.why;
   const g = f + o;
   const out = k(g, SC.end - 6, SC.end + 4);
+  const wide = useWide();
   const rows: [number, number, Record<number, string>][] = [
     [78, 82, {78: T.lime}],
     [83, 85, {85: T.lime}],
@@ -353,7 +369,7 @@ export const H7Why: React.FC = () => {
   return (
     <Wipe>
       <Bg mode="dark" />
-      <div style={{position: 'absolute', left: 70, top: 470, opacity: 1 - out, filter: `blur(${out * 12}px)`}}>
+      <div style={{position: 'absolute', left: wide ? 100 : 70, top: wide ? 260 : 470, opacity: 1 - out, filter: `blur(${out * 12}px)`}}>
         <VoWords from={76} to={77} offset={o} size={100} color="#fff" />
         <div style={{marginTop: 46}}>
           {rows.map(([a, b, acc], i) => (
@@ -377,10 +393,11 @@ export const H8End: React.FC = () => {
   const txt = k(g, W(94) - 2, W(94) + 6);
   const brand = useSpr(W(98) - o, 12, 150);
   const fadeAll = k(g, TOTAL - 32, TOTAL - 2);
+  const wide = useWide();
   return (
     <AbsoluteFill>
       <Bg mode="dark" />
-      <AbsoluteFill style={{opacity: 1 - fadeAll, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 640, fontFamily: T.font, color: '#fff', textAlign: 'center'}}>
+      <AbsoluteFill style={{opacity: 1 - fadeAll, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: wide ? 300 : 640, fontFamily: T.font, color: '#fff', textAlign: 'center'}}>
         <VoWords from={90} to={92} offset={o} size={84} color="#fff" accent={{92: T.lime}} />
         <div style={{marginTop: 50, height: 120, display: 'flex', justifyContent: 'center'}}>
           <div style={{width: 120 + bar * 820, height: 120, borderRadius: 60, background: T.blue, boxShadow: `0 0 70px ${T.blue}aa`, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', transform: `scale(${0.6 + Math.min(1, bar * 2) * 0.4})`}}>
@@ -402,15 +419,16 @@ export const Header: React.FC<{mode: 'light' | 'dark'}> = ({mode}) => {
   const g = useCurrentFrame();
   const light = mode === 'light';
   const shrink = k(g, W(9) - 14, W(9) + 2, io); // big → small as the demo starts
-  const size = interpolate(shrink, [0, 1], [104, 62]);
-  const top = interpolate(shrink, [0, 1], [280, 150]);
+  const wide = useWide();
+  const size = interpolate(shrink, [0, 1], wide ? [84, 50] : [104, 62]);
+  const top = interpolate(shrink, [0, 1], wide ? [180, 70] : [280, 150]);
   const fade = 1 - k(g, TOTAL - 32, TOTAL - 2);
   const word = (i: number) => k(g, W(i) - 2, W(i) + 7);
   const sp = (i: number, child: React.ReactNode) => (
     <span style={{display: 'inline-block', opacity: word(i), filter: `blur(${(1 - word(i)) * 10}px)`, transform: `translateY(${(1 - word(i)) * 14}px)`, marginRight: '0.24em'}}>{child}</span>
   );
   return (
-    <div style={{position: 'absolute', left: 70, top, fontFamily: T.font, fontWeight: 700, fontSize: size, lineHeight: 1.08, letterSpacing: -size * 0.025, color: light ? T.ink : '#fff', opacity: fade}}>
+    <div style={{position: 'absolute', left: wide ? 100 : 70, top, fontFamily: T.font, fontWeight: 700, fontSize: size, lineHeight: 1.08, letterSpacing: -size * 0.025, color: light ? T.ink : '#fff', opacity: fade}}>
       {sp(4, 'Kami')}
       {sp(5, 'rakam')}
       {sp(6, 'guna')}
