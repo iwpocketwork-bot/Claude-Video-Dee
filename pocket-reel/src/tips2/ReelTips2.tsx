@@ -8,9 +8,29 @@ import '@fontsource/jetbrains-mono/400.css';
 import '@fontsource/jetbrains-mono/700.css';
 import {H1Hook, H2Phone, H3Dulu, H4Cards, H5Stabil, H6Audio, H7Why, H8End, Header, KaraokePill, WIPE_DUR} from './Scenes';
 import {SC, TOTAL, W} from './timing';
+import {WORDS} from './words';
 
 // Style 04b — "Kinetic Explainer" ikut struktur video rujukan, disegerak frame-by-frame dengan VO lelaki.
-// Muzik: TIADA (pengguna akan tambah sendiri). Audio = VO + SFX halus.
+// Muzik: tukar fail di MUSIC_FILE. Muzik di-'duck' (direndahkan) bila VO bercakap.
+export const MUSIC_FILE = 'music.mp3';
+const MUSIC_UP = 0.32; // jeda / intro / outro
+const MUSIC_DUCK = 0.12; // bawah suara
+
+/** 0..1 — how much the VO is speaking around frame fr (smoothed ±6 frames) */
+const speaking = (fr: number) => {
+  const t = fr / 30;
+  let v = 0;
+  for (const [, a, b] of WORDS) {
+    if (t >= a - 0.2 && t <= b + 0.35) return 1;
+    const d = Math.min(Math.abs(t - (a - 0.2)), Math.abs(t - (b + 0.35)));
+    if (d < 0.25) v = Math.max(v, 1 - d / 0.25);
+  }
+  return v;
+};
+const musicVolume = (fr: number) => {
+  const env = interpolate(fr, [0, 12, TOTAL - 45, TOTAL - 2], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  return env * (MUSIC_UP - (MUSIC_UP - MUSIC_DUCK) * speaking(fr));
+};
 
 const MODES: [number, 'light' | 'dark'][] = [
   [0, 'light'],
@@ -83,6 +103,7 @@ export const ReelTips2: React.FC = () => {
   }, [h]);
   return (
     <AbsoluteFill style={{background: '#000'}}>
+      <Audio src={staticFile(MUSIC_FILE)} volume={musicVolume} />
       <Audio src={staticFile('vo/vo3_takeB.mp3')} volume={1} />
       {CUES.map(([fr, name, vol], i) => (
         <Sequence key={i} from={fr} durationInFrames={75} layout="none">
