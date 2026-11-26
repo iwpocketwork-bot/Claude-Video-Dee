@@ -97,7 +97,7 @@ export const H1Hook: React.FC = () => {
     <AbsoluteFill>
       <Bg mode="light" />
       <div style={{position: 'absolute', left: 70, top: 140}}>
-        <VoWords from={0} to={3} offset={0} size={92} color={T.ink} out={out} />
+        <VoWords from={0} to={3} offset={0} size={80} color={T.ink} out={out} style={{whiteSpace: 'nowrap'}} />
       </div>
     </AbsoluteFill>
   );
@@ -403,7 +403,7 @@ export const Header: React.FC<{mode: 'light' | 'dark'}> = ({mode}) => {
   const light = mode === 'light';
   const shrink = k(g, W(9) - 14, W(9) + 2, io); // big → small as the demo starts
   const size = interpolate(shrink, [0, 1], [104, 62]);
-  const top = interpolate(shrink, [0, 1], [262, 150]);
+  const top = interpolate(shrink, [0, 1], [280, 150]);
   const fade = 1 - k(g, TOTAL - 32, TOTAL - 2);
   const word = (i: number) => k(g, W(i) - 2, W(i) + 7);
   const sp = (i: number, child: React.ReactNode) => (
