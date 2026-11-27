@@ -16,6 +16,8 @@ export const RemotionRoot: React.FC = () => (
   <>
     {/* Style 01 — Kinetic UI (locked) */}
     <Composition id="PocketReel" component={Reel} durationInFrames={900} fps={30} width={1080} height={1920} />
+    {/* Style 01 — Kinetic UI: 16:9 website */}
+    <Composition id="PocketReelWide" component={Reel} durationInFrames={900} fps={30} width={1920} height={1080} />
     {/* Style 02 — Minimal Elegan */}
     <Composition id="PocketReelMinimal" component={ReelMinimal} durationInFrames={900} fps={30} width={1080} height={1920} />
     {/* Style 03 — 3D World */}

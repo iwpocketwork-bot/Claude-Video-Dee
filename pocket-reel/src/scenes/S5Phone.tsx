@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import {AbsoluteFill, interpolate, random, spring, useCurrentFrame, useVideoConfig} from 'remotion';
 import {ThreeCanvas} from '@remotion/three';
 import {RoundedBox} from '@react-three/drei';
-import {C, clamp, DarkBg, FONT, p} from '../common';
+import {C, clamp, DarkBg, FONT, p, useWide} from '../common';
 
 const W = 600;
 const H = 1280;
@@ -190,22 +190,23 @@ export const S5Phone: React.FC = () => {
   const t2 = spring({frame: f - 30, fps, config: {damping: 14}});
   const hl = p(f, 38, 50);
   const ex = p(f, 114, 127);
+  const wide = useWide();
   return (
     <AbsoluteFill style={{opacity: 1 - ex, transform: `scale(${1 - ex * 0.15})`}}>
       <DarkBg speed={2} />
       <ThreeCanvas width={width} height={height} camera={{fov: 50, position: [0, 0, 9]}}>
         <Phone />
       </ThreeCanvas>
-      <div style={{position: 'absolute', top: 170, width: '100%', textAlign: 'center', fontFamily: FONT, color: '#fff'}}>
-        <div style={{fontSize: 70, fontWeight: 600, opacity: t1, transform: `translateY(${(1 - t1) * 60}px)`}}>Content yang buat orang</div>
+      <div style={{position: 'absolute', top: wide ? 330 : 170, left: wide ? 90 : 0, width: wide ? 800 : '100%', textAlign: wide ? 'left' : 'center', fontFamily: FONT, color: '#fff'}}>
+        <div style={{fontSize: wide ? 56 : 70, fontWeight: 600, opacity: t1, transform: `translateY(${(1 - t1) * 60}px)`}}>Content yang buat orang</div>
         <div style={{position: 'relative', display: 'inline-block', marginTop: 10, opacity: t2, transform: `translateY(${(1 - t2) * 60}px)`}}>
           <div style={{position: 'absolute', inset: '6px -18px', background: C.lime, transformOrigin: 'left', transform: `scaleX(${hl}) skewX(-8deg)`, borderRadius: 10}} />
-          <span style={{position: 'relative', fontSize: 104, fontWeight: 900, color: hl > 0.5 ? C.ink : '#fff', letterSpacing: -2}}>BERHENTI SCROLL.</span>
+          <span style={{position: 'relative', fontSize: wide ? 80 : 104, fontWeight: 900, color: hl > 0.5 ? C.ink : '#fff', letterSpacing: -2}}>BERHENTI SCROLL.</span>
         </div>
       </div>
-      <Chip text="Lebih engagement" delay={60} x={60} y={1560} color={C.pink} />
-      <Chip text="Lebih capaian" delay={70} x={560} y={1680} color={C.cyan} />
-      <Chip text="Lebih jualan" delay={80} x={140} y={1790} color={C.green} />
+      <Chip text="Lebih engagement" delay={60} x={wide ? 1290 : 60} y={wide ? 300 : 1560} color={C.pink} />
+      <Chip text="Lebih capaian" delay={70} x={wide ? 1380 : 560} y={wide ? 450 : 1680} color={C.cyan} />
+      <Chip text="Lebih jualan" delay={80} x={wide ? 1290 : 140} y={wide ? 600 : 1790} color={C.green} />
     </AbsoluteFill>
   );
 };

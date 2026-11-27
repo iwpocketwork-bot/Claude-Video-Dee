@@ -70,14 +70,14 @@ export const CUES: Cue[] = [
   [690, 'click', 0.8],
   [714, 'whoosh', 0.7], // bokeh
   // S9 End (720)
-  [722, 'impact', 1.0], // 3D logo
-  [724, 'shimmer', 0.5],
   [734, 'pop', 0.4],
   [742, 'pop', 0.5], // BERKEMBANG
   [756, 'pop', 0.4],
   [770, 'pop', 0.8], // WhatsApp button
   [780, 'ding', 0.75], // number
-  [790, 'shimmer', 0.45],
+  [818, 'whoosh', 0.6], // text out
+  [828, 'impact', 1.0], // final 3D logo
+  [830, 'shimmer', 0.55],
 ];
 
 export const Sfx: React.FC = () => (

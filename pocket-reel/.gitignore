@@ -1,6 +1,5 @@
 node_modules
 out/*
-!out/PocketProduction_Reel_9x16_v6.mp4
 !out/PocketProduction_Reel_Minimal_9x16.mp4
 !out/PocketProduction_Reel_3DWorld_9x16.mp4
 !out/PocketProduction_3DWorld_16x9.mp4
@@ -9,3 +8,7 @@ out/*
 !out/PocketProduction_TipsSmartphone_SubClair_1080p.mp4
 !out/PocketProduction_TipsSmartphone_SubClair_16x9.mp4
 public/ref/
+!out/PocketProduction_Reel_9x16_v7.mp4
+!out/PocketProduction_KineticUI_16x9.mp4
+!out/PocketProduction_PocketClean_1080p.mp4
+!out/PocketProduction_PocketClean_16x9.mp4

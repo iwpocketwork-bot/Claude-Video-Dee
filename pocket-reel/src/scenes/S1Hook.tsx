@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Img, interpolate, random, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {C, Cursor, DarkBg, FONT, p} from '../common';
+import {C, Cursor, DarkBg, FONT, p, Stage} from '../common';
 
 const SLICES = 8;
 const WM_W = 700;
@@ -36,6 +36,7 @@ export const S1Hook: React.FC = () => {
           opacity: 1 - ex,
         }}
       >
+        <Stage dy={100}>
         {/* scan lines */}
         <div style={{position: 'absolute', left: 0, right: 0, top: 760 + (1 - scan) * -300, height: 3, background: C.cyan, opacity: 1 - p(f, 14, 22), boxShadow: `0 0 20px ${C.cyan}`}} />
         <div style={{position: 'absolute', left: 0, right: 0, top: 1160 + (1 - scan) * 300, height: 3, background: C.cyan, opacity: 1 - p(f, 14, 22), boxShadow: `0 0 20px ${C.cyan}`}} />
@@ -158,6 +159,7 @@ export const S1Hook: React.FC = () => {
         </div>
 
         <Cursor x={interpolate(cur, [0, 1], [1000, 620])} y={interpolate(cur, [0, 1], [1600, 900])} label="Pocket" scale={1 - Math.sin(click * Math.PI) * 0.15} />
+        </Stage>
       </AbsoluteFill>
     </AbsoluteFill>
   );

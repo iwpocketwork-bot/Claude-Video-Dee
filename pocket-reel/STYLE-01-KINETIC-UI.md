@@ -1,7 +1,7 @@
 # Style 01: "Kinetic UI" (LOCKED)
 
 Pocket Production · Reels 9:16 · 1080×1920 · 30fps · 30s
-Video akhir: `out/PocketProduction_Reel_9x16_v6.mp4`
+Video akhir: `out/PocketProduction_Reel_9x16_v7.mp4` (9:16) · `out/PocketProduction_KineticUI_16x9.mp4` (16:9 website, composition `PocketReelWide`)
 Git tag: `style-01-locked`
 
 ## Identiti
