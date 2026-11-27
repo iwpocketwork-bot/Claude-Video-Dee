@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
-import {C, clamp, Cursor, FONT, GridBg, p} from '../common';
+import {C, clamp, Cursor, FONT, GridBg, p, Stage} from '../common';
 
 const TW = 680;
 const X0 = 540 - TW / 2;
@@ -23,8 +23,9 @@ export const S7Handwrite: React.FC = () => {
   return (
     <AbsoluteFill style={{opacity: inn}}>
       <GridBg />
+      <Stage>
       <div style={{position: 'absolute', top: 760, width: '100%', textAlign: 'center', fontFamily: FONT, color: '#aaa', fontSize: 46, fontWeight: 600, opacity: p(f, 6, 18)}}>
-        6 tahun pengalaman
+        26 tahun pengalaman
       </div>
       <svg width="1080" height="1920" style={{position: 'absolute'}}>
         <defs>
@@ -102,6 +103,7 @@ export const S7Handwrite: React.FC = () => {
       >
         Hubungi Kami
       </div>
+      </Stage>
     </AbsoluteFill>
   );
 };

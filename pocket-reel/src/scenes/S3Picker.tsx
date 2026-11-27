@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {C, clamp, FONT, GridBg, p, PlayIcon} from '../common';
+import {C, clamp, FONT, GridBg, p, PlayIcon, useWide} from '../common';
 
 const ITEMS = ['Video Production', 'Mobilegraphy', 'Photography', 'Graphic Design', 'Advertising', 'Event Coverage', 'Training Programs'];
 const STEPS = [12, 26, 40, 54, 68, 82];
@@ -13,6 +13,7 @@ export const S3Picker: React.FC = () => {
   const blue = 1 - p(f, 10, 18);
   const inBlur = interpolate(f, [0, 10], [30, 0], clamp);
   const titleIn = spring({frame: f - 4, fps, config: {damping: 14}});
+  const wide = useWide();
 
   return (
     <AbsoluteFill style={{filter: `blur(${inBlur}px)`}}>
@@ -20,9 +21,10 @@ export const S3Picker: React.FC = () => {
       <div
         style={{
           position: 'absolute',
-          top: 300,
-          width: '100%',
-          textAlign: 'center',
+          top: wide ? 380 : 300,
+          left: wide ? 110 : 0,
+          width: wide ? 680 : '100%',
+          textAlign: wide ? 'left' : 'center',
           fontFamily: FONT,
           color: C.ink,
           opacity: titleIn,
@@ -33,7 +35,7 @@ export const S3Picker: React.FC = () => {
         <div style={{fontSize: 72, fontWeight: 900, letterSpacing: -2}}>Semua di bawah satu bumbung.</div>
       </div>
 
-      <AbsoluteFill style={{perspective: 1400, justifyContent: 'center', alignItems: 'center'}}>
+      <AbsoluteFill style={{perspective: 1400, justifyContent: 'center', alignItems: 'center', left: wide ? 760 : 0, width: wide ? 1160 : '100%'}}>
         {/* selection pill */}
         <div
           style={{
@@ -74,7 +76,7 @@ export const S3Picker: React.FC = () => {
               key={t}
               style={{
                 position: 'absolute',
-                left: 290,
+                left: wide ? 330 : 290,
                 fontFamily: FONT,
                 fontSize: 64,
                 fontWeight: ad < 0.5 ? 800 : 600,
