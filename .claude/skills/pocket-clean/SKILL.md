@@ -1,6 +1,6 @@
 ---
 name: pocket-clean
-description: Make a Pocket Production video in the locked "Pocket Clean" style (Style 06c) — modern, trendy, minimalist kinetic explainer with Pocket brand kit, light/dark scenes, tilted dark UI cards, blur-in words and a white caption capsule. Use when the user asks for a Pocket video "gaya Pocket Clean", "style 06c", "/pocketstyle", or a new explainer/promo in this look (9:16 Reels and/or 16:9 website).
+description: Make a Pocket Production video in the locked "Pocket Clean" style (Style 06c) — modern, trendy, minimalist kinetic explainer with Pocket brand kit, light/dark scenes, tilted dark UI cards, blur-in words and a white caption capsule. Use when the user asks for a Pocket video "gaya Pocket Clean", "style 06c", or a new explainer/promo in this look (9:16 Reels and/or 16:9 website).
 ---
 
 # Pocket Clean (Style 06c) — LOCKED
