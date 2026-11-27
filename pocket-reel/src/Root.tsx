@@ -8,6 +8,7 @@ import {ReelTips2} from './tips2/ReelTips2';
 import {TOTAL as TIPS2_TOTAL} from './tips2/timing';
 import {ReelPremium, PREMIUM_TOTAL} from './premium/ReelPremium';
 import {ReelPremiumEN, PREMIUM_EN_TOTAL} from './premium_en/ReelPremiumEN';
+import {ReelSignature, SIG_TOTAL} from './signature/ReelSignature';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -29,5 +30,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="PocketPremium" component={ReelPremium} durationInFrames={PREMIUM_TOTAL} fps={30} width={1080} height={1920} />
     {/* Style 05b — original video + print-ad overlay graphics (English) */}
     <Composition id="PocketPremiumEN" component={ReelPremiumEN} durationInFrames={PREMIUM_EN_TOTAL} fps={30} width={1080} height={1920} />
+    {/* Style 06 — Pocket Signature (mix of Styles 01–05, REF-04 content) */}
+    <Composition id="PocketSignature" component={ReelSignature} durationInFrames={SIG_TOTAL} fps={30} width={1080} height={1920} />
   </>
 );
