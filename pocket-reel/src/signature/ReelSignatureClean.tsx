@@ -168,11 +168,11 @@ const CAPS: [number, number, string][] = [
 ];
 const Capsule: React.FC = () => {
   const f = useCurrentFrame();
+  const wide = useWide();
   const cur = CAPS.find(([a, b]) => f >= a && f < b);
   if (!cur) return null;
   const [a, b, t] = cur;
   const v = k(f, a, a + 8) * (1 - k(f, b - 6, b));
-  const wide = useWide();
   return (
     <div style={{position: 'absolute', top: wide ? 940 : PILL_TOP, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
       <div style={{background: '#fff', color: C.ink, fontFamily: C.font, fontWeight: 500, fontSize: 34, padding: '13px 32px', borderRadius: 40, boxShadow: '0 12px 30px rgba(0,0,0,.16)', opacity: v, transform: `translateY(${(1 - v) * 12}px) scale(${0.94 + v * 0.06})`, filter: `blur(${(1 - v) * 6}px)`, whiteSpace: 'nowrap'}}>{t}</div>
