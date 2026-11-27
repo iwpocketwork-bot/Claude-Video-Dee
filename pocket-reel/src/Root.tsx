@@ -38,5 +38,6 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="PocketSignaturePrint" component={ReelSignaturePrint} durationInFrames={SIGP_TOTAL} fps={30} width={1080} height={1920} />
     {/* Style 06c — Pocket Clean: REF-04 look with Pocket brand kit */}
     <Composition id="PocketSignatureClean" component={ReelSignatureClean} durationInFrames={SIGC_TOTAL} fps={30} width={1080} height={1920} />
+    <Composition id="PocketSignatureCleanWide" component={ReelSignatureClean} durationInFrames={SIGC_TOTAL} fps={30} width={1920} height={1080} />
   </>
 );

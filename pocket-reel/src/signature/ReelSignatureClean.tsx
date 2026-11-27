@@ -33,7 +33,12 @@ const useSpr = (frame: number, damping = 15, stiffness = 140) => {
   return spring({frame, fps, config: {damping, stiffness}});
 };
 const CMD = '/pocketstyle edit macam biasa';
-const PILL_TOP = 1430; // raised caption capsule
+const PILL_TOP = 1430; // raised caption capsule (portrait)
+/** true for the 16:9 version */
+const useWide = () => {
+  const {width, height} = useVideoConfig();
+  return width > height;
+};
 
 // scene plan (mode per scene) — dark scenes enter with a circle wipe
 const DARK: [number, number][] = [
@@ -69,8 +74,9 @@ const Bg: React.FC<{dark?: boolean}> = ({dark}) => {
 
 const Wipe: React.FC<{start: number; children: React.ReactNode}> = ({start, children}) => {
   const f = useCurrentFrame();
+  const wide = useWide();
   const r = k(f, start, start + 16, io) * 2300;
-  return <AbsoluteFill style={{clipPath: `circle(${r}px at 540px 900px)`}}>{children}</AbsoluteFill>;
+  return <AbsoluteFill style={{clipPath: `circle(${r}px at ${wide ? 960 : 540}px ${wide ? 540 : 900}px)`}}>{children}</AbsoluteFill>;
 };
 
 type Wd = string | [string, React.CSSProperties];
@@ -127,15 +133,16 @@ const Header: React.FC = () => {
   const f = useCurrentFrame();
   const dark = isDark(f);
   const shrink = k(f, 70, 90, io);
-  const size = interpolate(shrink, [0, 1], [92, 58]);
-  const top = interpolate(shrink, [0, 1], [380, 150]);
+  const wide = useWide();
+  const size = interpolate(shrink, [0, 1], wide ? [80, 50] : [92, 58]);
+  const top = interpolate(shrink, [0, 1], wide ? [260, 70] : [380, 150]);
   const vis = k(f, 34, 46) * (1 - k(f, T.end - 6, T.end + 6));
   const w = (i: number) => k(f, 34 + i * 5, 44 + i * 5);
   const sp = (i: number, c: React.ReactNode) => (
     <span style={{display: 'inline-block', marginRight: '0.24em', opacity: w(i), filter: `blur(${(1 - w(i)) * 10}px)`, transform: `translateY(${(1 - w(i)) * 14}px)`}}>{c}</span>
   );
   return (
-    <div style={{position: 'absolute', left: 70, top, opacity: vis, fontFamily: C.font, fontWeight: 700, fontSize: size, lineHeight: 1.1, letterSpacing: -size * 0.025, color: dark ? '#fff' : C.ink}}>
+    <div style={{position: 'absolute', left: wide ? 100 : 70, top, opacity: vis, fontFamily: C.font, fontWeight: 700, fontSize: size, lineHeight: 1.1, letterSpacing: -size * 0.025, color: dark ? '#fff' : C.ink}}>
       {sp(0, 'Kami')}
       {sp(1, 'taip')}
       {sp(2, <span style={{background: dark ? 'transparent' : C.lime, color: dark ? C.lime : C.ink, padding: dark ? 0 : '0 .14em', borderRadius: 10}}>ni je</span>)}
@@ -165,8 +172,9 @@ const Capsule: React.FC = () => {
   if (!cur) return null;
   const [a, b, t] = cur;
   const v = k(f, a, a + 8) * (1 - k(f, b - 6, b));
+  const wide = useWide();
   return (
-    <div style={{position: 'absolute', top: PILL_TOP, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+    <div style={{position: 'absolute', top: wide ? 940 : PILL_TOP, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
       <div style={{background: '#fff', color: C.ink, fontFamily: C.font, fontWeight: 500, fontSize: 34, padding: '13px 32px', borderRadius: 40, boxShadow: '0 12px 30px rgba(0,0,0,.16)', opacity: v, transform: `translateY(${(1 - v) * 12}px) scale(${0.94 + v * 0.06})`, filter: `blur(${(1 - v) * 6}px)`, whiteSpace: 'nowrap'}}>{t}</div>
     </div>
   );
@@ -183,13 +191,14 @@ const HookChat: React.FC = () => {
   const board = k(f, T.chat + 116, T.chat + 132);
   const out = k(f, T.dulu + 4, T.dulu + 14);
   const cardH = interpolate(reply, [0, 1], [180, 380]) + interpolate(board, [0, 1], [0, 300]);
+  const wide = useWide();
   return (
     <AbsoluteFill>
       <Bg />
-      <div style={{position: 'absolute', left: 70, top: 150}}>
-        <Words w={['Nak', 'edit', 'video?']} at={4} size={100} color={C.ink} step={5} out={k(f, 62, 78)} />
+      <div style={{position: 'absolute', left: wide ? 100 : 70, top: wide ? 80 : 150}}>
+        <Words w={['Nak', 'edit', 'video?']} at={4} size={wide ? 84 : 100} color={C.ink} step={5} out={k(f, 62, 78)} />
       </div>
-      <Card at={58} x={60} y={600} w={960} h={cardH} out={out}>
+      <Card at={58} x={wide ? 800 : 60} y={wide ? 150 : 600} w={960} h={cardH} out={out} tilt={wide ? [6, -12] : [8, -6]}>
         <div style={{padding: 30}}>
           <div style={{display: 'inline-flex', gap: 10, alignItems: 'center', background: 'rgba(247,253,146,.12)', color: C.lime, borderRadius: 10, padding: '6px 14px', fontFamily: C.mono, fontSize: 22}}>▶ reel_pocket.mov · 0:58</div>
           <div style={{display: 'flex', alignItems: 'center', marginTop: 20, gap: 16}}>
@@ -231,16 +240,17 @@ const DuluLock: React.FC = () => {
   const lockIn = useSpr(f - T.lock - 30, 11, 200);
   const shut = k(f, T.lock + 34, T.lock + 42, io);
   const out = k(f, T.kit - 2, T.kit + 10);
+  const wide = useWide();
   return (
     <Wipe start={T.dulu}>
       <Bg dark />
-      <div style={{position: 'absolute', left: 70, right: 70, top: 470}}>
+      <div style={{position: 'absolute', left: wide ? 100 : 70, right: 70, top: wide ? 290 : 470}}>
         <Words w={['Dulu?']} at={T.dulu + 10} size={88} color="#fff" out={clear} />
         <Words w={['Nak', 'edit', 'video,', '\n', 'kena', 'brief', 'dari', ['awal.', {color: C.orange}]]} at={T.dulu + 22} size={88} color="#fff" step={3} out={clear} />
         <Words w={['Font', 'lain,', 'colour', 'lain.']} at={T.dulu + 66} size={36} color="rgba(255,255,255,.7)" weight={500} step={3} out={clear} style={{marginTop: 26}} />
         <Words w={[['Takde', {color: C.orange}], ['consistency.', {color: C.orange}]]} at={T.dulu + 84} size={36} color={C.orange} weight={600} step={3} out={clear} />
       </div>
-      <div style={{position: 'absolute', left: 70, right: 70, top: 600, opacity: 1 - out, filter: `blur(${out * 10}px)`}}>
+      <div style={{position: 'absolute', left: wide ? 100 : 70, right: 70, top: wide ? 330 : 600, opacity: 1 - out, filter: `blur(${out * 10}px)`}}>
         <div style={{display: 'flex', alignItems: 'center', gap: 24}}>
           <Words w={['So', 'kami', ['lock', {color: C.lime}]]} at={T.lock + 6} size={104} color="#fff" />
           <svg width={86} height={100} viewBox="0 0 26 30" style={{transform: `scale(${lockIn})`}}>
@@ -264,10 +274,11 @@ const SW: [string, string, string][] = [
 const Kit: React.FC = () => {
   const f = useCurrentFrame();
   const out = k(f, T.board - 2, T.board + 10);
+  const wide = useWide();
   return (
     <Wipe start={T.kit}>
       <Bg />
-      <Card at={T.kit + 10} x={60} y={520} w={560} h={560} bg="#ffffff" out={out} tilt={[8, 8]}>
+      <Card at={T.kit + 10} x={wide ? 720 : 60} y={wide ? 200 : 520} w={560} h={560} bg="#ffffff" out={out} tilt={[8, 8]}>
         <div style={{padding: 34, color: C.ink}}>
           <div style={{fontSize: 210, fontWeight: 800, lineHeight: 1, letterSpacing: -6}}>Aa</div>
           <div style={{display: 'flex', gap: 22, marginTop: 30}}>
@@ -281,7 +292,7 @@ const Kit: React.FC = () => {
           <div style={{fontSize: 24, color: '#666', marginTop: 26}}>Poppins je. Kemas, minimal.</div>
         </div>
       </Card>
-      <Card at={T.kit + 22} x={650} y={560} w={370} h={480} out={out} tilt={[8, -10]}>
+      <Card at={T.kit + 22} x={wide ? 1320 : 650} y={wide ? 240 : 560} w={wide ? 480 : 370} h={480} out={out} tilt={[8, -10]}>
         <div style={{padding: 22, display: 'flex', flexDirection: 'column', gap: 12, height: '100%', boxSizing: 'border-box'}}>
           {SW.map(([hex, name, fg], i) => {
             const v = k(f, T.kit + 34 + i * 10, T.kit + 44 + i * 10);
@@ -294,7 +305,7 @@ const Kit: React.FC = () => {
           })}
         </div>
       </Card>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 1170, display: 'flex', justifyContent: 'center', opacity: k(f, T.kit + 90, T.kit + 102) * (1 - out)}}>
+      <div style={{position: 'absolute', left: wide ? 100 : 0, right: wide ? undefined : 0, top: wide ? 420 : 1170, display: 'flex', justifyContent: 'center', opacity: k(f, T.kit + 90, T.kit + 102) * (1 - out)}}>
         <Img src={staticFile('logo-dark.png')} style={{height: 90}} />
       </div>
     </Wipe>
@@ -306,24 +317,25 @@ const Board: React.FC = () => {
   const f = useCurrentFrame();
   const go = useSpr(f - T.board - 92, 10, 200);
   const out = k(f, T.motion - 2, T.motion + 10);
+  const wide = useWide();
   return (
     <AbsoluteFill>
       <Bg />
       <div style={{opacity: 1 - out}}>
-        <Mono style={{position: 'absolute', left: 70, top: 470, opacity: k(f, T.board + 6, T.board + 16)}}>Storyboard video ni · v1 → v5</Mono>
+        <Mono style={{position: 'absolute', left: wide ? 100 : 70, top: wide ? 300 : 470, opacity: k(f, T.board + 6, T.board + 16)}}>Storyboard video ni · v1 → v5</Mono>
         {[
           [1, '01 · Hook'],
           [3, '02 · Insight'],
           [4, '03 · Showcase'],
         ].map(([n, lbl], i) => (
-          <Card key={i} at={T.board + 12 + i * 8} x={70 + i * 320} y={540 + Math.abs(i - 1) * 30} w={300} h={560} bg="#ffffff" tilt={[6, (1 - i) * 8]}>
+          <Card key={i} at={T.board + 12 + i * 8} x={wide ? 760 + i * 350 : 70 + i * 320} y={(wide ? 170 : 540) + Math.abs(i - 1) * 30} w={300} h={560} bg="#ffffff" tilt={[6, (1 - i) * 8]}>
             <div style={{padding: 12}}>
               <Img src={staticFile(`style06/t${n}.jpg`)} style={{width: 276, height: 480, objectFit: 'cover', borderRadius: 20, display: 'block'}} />
               <Mono style={{color: C.ink, padding: '12px 6px 0', fontWeight: 700}}>{lbl}</Mono>
             </div>
           </Card>
         ))}
-        <div style={{position: 'absolute', left: 0, right: 0, top: 1200, display: 'flex', justifyContent: 'center'}}>
+        <div style={{position: 'absolute', left: wide ? 100 : 0, right: wide ? undefined : 0, top: wide ? 380 : 1200, display: 'flex', justifyContent: 'center'}}>
           <div style={{background: C.ink, color: C.lime, fontFamily: C.font, fontWeight: 700, fontSize: 44, padding: '12px 38px', borderRadius: 40, transform: `scale(${go})`}}>"go" ✓</div>
         </div>
       </div>
@@ -334,10 +346,14 @@ const Board: React.FC = () => {
 // ------------------------------------------------------------- 7. motion — flat lime ball on a track (dark, REF-04)
 const Motion: React.FC = () => {
   const f = useCurrentFrame();
+  const wide = useWide();
+  const X0 = wide ? 820 : 170;
+  const X1 = wide ? 1760 : 910;
+  const BASE = wide ? 820 : 1160;
   const t = Math.max(0, f - T.motion - 12) / 150;
   const ph = (t * 3) % 1;
-  const bx = interpolate(Math.min(1, t), [0, 1], [170, 910]);
-  const by = 1160 - Math.abs(Math.sin(ph * Math.PI)) * 330 * (1 - Math.min(1, t) * 0.3);
+  const bx = interpolate(Math.min(1, t), [0, 1], [X0, X1]);
+  const by = BASE - Math.abs(Math.sin(ph * Math.PI)) * 330 * (1 - Math.min(1, t) * 0.3);
   const contact = ph < 0.07 || ph > 0.93 ? 1 - Math.min(ph, 1 - ph) / 0.07 : 0;
   const vy = Math.cos(ph * Math.PI);
   const stretch = Math.abs(vy) * 0.22 * (1 - contact);
@@ -347,18 +363,18 @@ const Motion: React.FC = () => {
     <Wipe start={T.motion}>
       <Bg dark />
       <div style={{opacity: 1 - out}}>
-        <Mono dark style={{position: 'absolute', left: 70, top: 470, opacity: k(f, T.motion + 20, T.motion + 30)}}>stretch ikut arah gerak</Mono>
-        <div style={{position: 'absolute', left: 120, right: 120, top: 1200, height: 2, background: 'rgba(255,255,255,.18)'}} />
+        <Mono dark style={{position: 'absolute', left: wide ? 100 : 70, top: wide ? 300 : 470, opacity: k(f, T.motion + 20, T.motion + 30)}}>stretch ikut arah gerak</Mono>
+        <div style={{position: 'absolute', left: wide ? 780 : 120, right: 120, top: BASE + 40, height: 2, background: 'rgba(255,255,255,.18)'}} />
         {[9, 6, 3].map((d, i) => {
           const tt = Math.max(0, f - d - T.motion - 12) / 150;
           const p2 = (tt * 3) % 1;
-          const x2 = interpolate(Math.min(1, tt), [0, 1], [170, 910]);
-          const y2 = 1160 - Math.abs(Math.sin(p2 * Math.PI)) * 330 * (1 - Math.min(1, tt) * 0.3);
+          const x2 = interpolate(Math.min(1, tt), [0, 1], [X0, X1]);
+          const y2 = BASE - Math.abs(Math.sin(p2 * Math.PI)) * 330 * (1 - Math.min(1, tt) * 0.3);
           return <div key={i} style={{position: 'absolute', left: x2 - 36, top: y2 - 36, width: 72, height: 72, borderRadius: 36, background: C.lime, opacity: 0.08 + i * 0.06}} />;
         })}
         <div style={{position: 'absolute', left: bx - 40, top: by - 40 + contact * 12, width: 80, height: 80, borderRadius: 40, background: C.lime, boxShadow: `0 0 40px ${C.lime}66`, transform: `scale(${1 + contact * 0.3 - stretch * 0.4}, ${1 - contact * 0.28 + stretch})`}} />
-        <Mono dark style={{position: 'absolute', left: 120, top: 1226, color: C.lime, opacity: k(f, T.motion + 40, T.motion + 50)}}>squash 14%</Mono>
-        <div style={{position: 'absolute', right: 70, top: 560, width: 360, opacity: g, transform: `translateY(${(1 - g) * 40}px)`}}>
+        <Mono dark style={{position: 'absolute', left: wide ? 780 : 120, top: BASE + 66, color: C.lime, opacity: k(f, T.motion + 40, T.motion + 50)}}>squash 14%</Mono>
+        <div style={{position: 'absolute', right: wide ? undefined : 70, left: wide ? 100 : undefined, top: wide ? 380 : 560, width: 360, opacity: g, transform: `translateY(${(1 - g) * 40}px)`}}>
           <div style={{background: 'rgba(255,255,255,.05)', border: '1.5px solid rgba(255,255,255,.1)', borderRadius: 24, padding: 20}}>
             <Mono dark style={{fontSize: 17}}>overshoot 7%</Mono>
             <svg width={320} height={110} style={{marginTop: 8}}>
@@ -377,10 +393,11 @@ const AudioS: React.FC = () => {
   const fix = k(f, T.audio + 60, T.audio + 96, io);
   const lufs = Math.round(interpolate(fix, [0, 1], [-27, -14]));
   const out = k(f, T.why - 2, T.why + 10);
+  const wide = useWide();
   return (
     <Wipe start={T.audio}>
       <Bg />
-      <Card at={T.audio + 8} x={60} y={520} w={960} h={260} out={out}>
+      <Card at={T.audio + 8} x={wide ? 800 : 60} y={wide ? 170 : 520} w={960} h={260} out={out}>
         <div style={{padding: 26}}>
           <Mono dark style={{color: fix < 0.5 ? C.orange : C.lime}}>{fix < 0.5 ? 'suara · sebelum' : 'selepas · master'}</Mono>
           <div style={{display: 'flex', alignItems: 'center', gap: 5, height: 160, marginTop: 10}}>
@@ -392,13 +409,13 @@ const AudioS: React.FC = () => {
           </div>
         </div>
       </Card>
-      <Card at={T.audio + 50} x={60} y={830} w={460} h={190} bg="#ffffff" out={out} tilt={[6, 6]}>
+      <Card at={T.audio + 50} x={wide ? 800 : 60} y={wide ? 480 : 830} w={460} h={190} bg="#ffffff" out={out} tilt={[6, 6]}>
         <div style={{padding: '22px 30px', color: C.ink}}>
           <div style={{fontSize: 76, fontWeight: 800}}>{lufs}</div>
           <Mono>LUFS · master</Mono>
         </div>
       </Card>
-      <Card at={T.audio + 104} x={560} y={830} w={460} h={190} bg="#ffffff" out={out} tilt={[6, -6]}>
+      <Card at={T.audio + 104} x={wide ? 1300 : 560} y={wide ? 480 : 830} w={460} h={190} bg="#ffffff" out={out} tilt={[6, -6]}>
         <div style={{padding: '22px 30px', color: C.ink}}>
           <div style={{fontSize: 76, fontWeight: 800}}>
             28.8<span style={{fontSize: 32}}>MB</span>
@@ -419,12 +436,13 @@ const Why: React.FC = () => {
     [T.why + 64, ['Semua', 'video,', 'stay', ['consistent.', {color: C.lime}]]],
     [T.why + 88, ['Kami', 'brief', ['idea', {color: C.lime}], 'je.']],
   ];
+  const wide = useWide();
   return (
     <Wipe start={T.why}>
       <Bg dark />
-      <div style={{position: 'absolute', left: 70, right: 70, top: 520, opacity: 1 - out, filter: `blur(${out * 10}px)`}}>
+      <div style={{position: 'absolute', left: wide ? 100 : 70, right: 70, top: wide ? 260 : 520, opacity: 1 - out, filter: `blur(${out * 10}px)`, display: wide ? 'flex' : 'block', gap: 120}}>
         <Words w={['Kenapa', 'sesuai', '\n', 'untuk', 'kami?']} at={T.why + 8} size={92} color="#fff" />
-        <div style={{marginTop: 40}}>
+        <div style={{marginTop: wide ? 10 : 40}}>
           {rows.map(([at, w], i) => (
             <div key={i} style={{marginBottom: 26}}>
               <Mono dark style={{color: C.lime, opacity: k(f, at - 4, at + 4)}}>0{i + 1}</Mono>
@@ -444,16 +462,17 @@ const End: React.FC = () => {
   const txt = k(f, T.end + 16, T.end + 26);
   const logo = useSpr(f - T.end - 70, 14, 140);
   const fade = k(f, SIGC_TOTAL - 26, SIGC_TOTAL - 2);
+  const wide = useWide();
   return (
     <AbsoluteFill style={{opacity: 1 - fade}}>
       <Bg dark />
-      <div style={{position: 'absolute', left: 0, right: 0, top: 720, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', fontFamily: C.font, color: '#fff'}}>
+      <div style={{position: 'absolute', left: 0, right: 0, top: wide ? 260 : 720, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', fontFamily: C.font, color: '#fff'}}>
         <div style={{width: 110 + bar * 520, height: 104, borderRadius: 52, background: C.lime, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', boxShadow: `0 0 70px ${C.lime}55`}}>
           <span style={{fontFamily: C.mono, fontWeight: 700, fontSize: 46, color: C.ink, opacity: txt, filter: `blur(${(1 - txt) * 8}px)`, whiteSpace: 'nowrap'}}>/pocketstyle</span>
         </div>
         <Words w={['Video', 'yang', 'anda', 'tengok', 'ni', '\n', 'pun', 'dibuat', 'guna', 'ni', 'je.']} at={T.end + 32} size={44} color="#fff" weight={500} step={2} style={{marginTop: 40, lineHeight: 1.35}} />
         <Mono dark style={{marginTop: 30, opacity: k(f, T.end + 58, T.end + 68)}}>Next video? Satu command je.</Mono>
-        <Img src={staticFile('logo-white.png')} style={{width: 300, marginTop: 80, opacity: logo, transform: `scale(${0.88 + logo * 0.12})`}} />
+        <Img src={staticFile('logo-white.png')} style={{width: 300, marginTop: wide ? 50 : 80, opacity: logo, transform: `scale(${0.88 + logo * 0.12})`}} />
       </div>
     </AbsoluteFill>
   );
