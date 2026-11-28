@@ -323,9 +323,7 @@ const EndCard: React.FC = () => {
         <div style={{fontFamily: P.type, fontSize: 32, color: P.inkSoft, marginTop: 26, opacity: k(g, VIDEO_END + 26, VIDEO_END + 40)}}>Content that earns trust, not just attention.</div>
       </div>
       <div style={{position: 'absolute', left: 0, right: 0, top: 1040, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: logo, transform: `scale(${0.85 + logo * 0.15})`}}>
-        <div style={{fontFamily: P.sans, fontWeight: 500, letterSpacing: 8, fontSize: 30}}>TALK TO</div>
-        <Img src={staticFile('logo-dark.png')} style={{width: 300, marginTop: 20}} />
-        <div style={{fontFamily: P.type, fontSize: 34, marginTop: 36}}>WhatsApp Dee · 011-1620 0864</div>
+        <Img src={staticFile('logo-dark.png')} style={{width: 300}} />
       </div>
       <div style={{position: 'absolute', left: L, right: L, top: 1680, textAlign: 'center', fontFamily: P.sans, fontSize: 22, letterSpacing: 2, color: P.inkSoft, lineHeight: 1.6, opacity: k(g, VIDEO_END + 70, VIDEO_END + 90)}}>
         <div style={{height: 1, background: P.inkSoft, opacity: 0.5, marginBottom: 14}} />
