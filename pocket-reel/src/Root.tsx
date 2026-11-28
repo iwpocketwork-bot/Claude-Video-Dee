@@ -11,6 +11,7 @@ import {ReelPremiumEN, PREMIUM_EN_TOTAL} from './premium_en/ReelPremiumEN';
 import {ReelSignature, SIG_TOTAL} from './signature/ReelSignature';
 import {ReelSignaturePrint, SIGP_TOTAL} from './signature/ReelSignaturePrint';
 import {ReelPrintAd02, PRINTAD02_TOTAL} from './printad02/ReelPrintAd02';
+import {ReelClean01, CLEAN01_TOTAL} from './clean01/ReelClean01';
 import {ReelSignatureClean, SIGC_TOTAL} from './signature/ReelSignatureClean';
 
 export const RemotionRoot: React.FC = () => (
@@ -42,6 +43,8 @@ export const RemotionRoot: React.FC = () => (
     {/* Style 06b — Pocket Signature content in the print-ad (Style 05) look */}
     <Composition id="PocketSignaturePrint" component={ReelSignaturePrint} durationInFrames={SIGP_TOTAL} fps={30} width={1080} height={1920} />
     {/* Style 06c — Pocket Clean: REF-04 look with Pocket brand kit */}
+    {/* Pocket Clean applied to own footage: cut-out talking head, upscaled, 16:9 */}
+    <Composition id="PocketClean01Wide" component={ReelClean01} durationInFrames={CLEAN01_TOTAL} fps={30} width={1920} height={1080} />
     <Composition id="PocketSignatureClean" component={ReelSignatureClean} durationInFrames={SIGC_TOTAL} fps={30} width={1080} height={1920} />
     <Composition id="PocketSignatureCleanWide" component={ReelSignatureClean} durationInFrames={SIGC_TOTAL} fps={30} width={1920} height={1080} />
   </>
