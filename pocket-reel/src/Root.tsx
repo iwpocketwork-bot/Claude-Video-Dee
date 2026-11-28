@@ -10,6 +10,7 @@ import {ReelPremium, PREMIUM_TOTAL} from './premium/ReelPremium';
 import {ReelPremiumEN, PREMIUM_EN_TOTAL} from './premium_en/ReelPremiumEN';
 import {ReelSignature, SIG_TOTAL} from './signature/ReelSignature';
 import {ReelSignaturePrint, SIGP_TOTAL} from './signature/ReelSignaturePrint';
+import {ReelPrintAd02, PRINTAD02_TOTAL} from './printad02/ReelPrintAd02';
 import {ReelSignatureClean, SIGC_TOTAL} from './signature/ReelSignatureClean';
 
 export const RemotionRoot: React.FC = () => (
@@ -33,6 +34,8 @@ export const RemotionRoot: React.FC = () => (
     {/* Style 05 — Iklan Cetak Klasik: Berhenti panggil produk anda premium */}
     <Composition id="PocketPremium" component={ReelPremium} durationInFrames={PREMIUM_TOTAL} fps={30} width={1080} height={1920} />
     {/* Style 05b — original video + print-ad overlay graphics (English) */}
+    {/* Style 05b — Print Ad overlay, episode 02: people buy safe decisions */}
+    <Composition id="PocketPrintAd02" component={ReelPrintAd02} durationInFrames={PRINTAD02_TOTAL} fps={30} width={1080} height={1920} />
     <Composition id="PocketPremiumEN" component={ReelPremiumEN} durationInFrames={PREMIUM_EN_TOTAL} fps={30} width={1080} height={1920} />
     {/* Style 06 — Pocket Signature (mix of Styles 01–05, REF-04 content) */}
     <Composition id="PocketSignature" component={ReelSignature} durationInFrames={SIG_TOTAL} fps={30} width={1080} height={1920} />
